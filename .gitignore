@@ -29,4 +29,5 @@ coverage.xml
 .ropeproject
 
 # Sphinx documentation
-docs/_build/
+docs/build/
+docs/Makefile
