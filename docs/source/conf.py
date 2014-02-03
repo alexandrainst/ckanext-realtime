@@ -153,7 +153,13 @@ html_static_path = ['_static']
 #html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
-#html_sidebars = {}
+html_sidebars = {
+    '**':  ['relations.html', 'globaltoc.html'],
+    # There's no point in showing the table of contents in the sidebar on the
+    # table of contents page! So:
+    'index': ['relations.html'],
+}
+
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
