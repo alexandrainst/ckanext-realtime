@@ -36,9 +36,9 @@ class SessionFactory(object):
         :param read_connection_url: sqlalchemy url of connection used for 
             reading
         :type read_connection_url: string
-        :param read_connection_url: sqlalchemy url of connection used for 
+        :param write_connection_url: sqlalchemy url of connection used for 
             writing
-        :type read_connection_url: string 
+        :type write_connection_url: string 
         '''
         cls._configured = True
         
