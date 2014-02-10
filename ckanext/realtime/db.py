@@ -2,12 +2,63 @@ import logging
 
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.sql import exists
 
-from ckanext.realtime.plugin import RealtimeException
+from ckanext.realtime.exc import RealtimeError
+from ckanext.realtime.model import ObservableDatastoreMetadata
 
 log = logging.getLogger(__name__)
 
 _engines = {}
+
+def mark_as_observable(resource_id):
+    '''
+    Marks datastore as observable by inserting a row into _realtime_metadata
+        table.
+        
+    :param resource_id: resource id that identifies datastore.
+    :type resource_id: uuid
+    :returns: success indicator
+    :rtype: bool
+    '''
+    if is_observable(resource_id):
+        return True
+    
+    s = SessionFactory.get_write_session()
+    meta = ObservableDatastoreMetadata(uuid=resource_id)
+    s.add(meta)
+    
+    try:
+        s.commit()
+    except SQLAlchemyError, e:
+        log.error(str(e))
+        return False
+    return True
+
+def is_observable(resource_id):
+    '''
+    Returns true if the datastore under the specified resource is observable.
+    
+    :param resource_id: resource id that identifies datastore.
+    :type resource_id: str
+    :returns: success indicator
+    :rtype: bool
+    '''
+    s = SessionFactory.get_read_session()
+    return (s.query(exists()
+            .where(ObservableDatastoreMetadata.uuid == resource_id)).scalar())
+
+def create_metadata_table(write_url):
+    ''' 
+    ckanext-realtime has some additional metadata on top of the metadata
+    in ckanext-datastore.
+    '''     
+    try:
+        connection = _get_engine(write_url).connect()
+        ObservableDatastoreMetadata.initiate_table(connection)
+    finally:
+        connection.close() 
     
     
 def _get_engine(connection_url):
