@@ -18,8 +18,6 @@ class ObservableDatastoreMetadata(Base):
     def initiate_table(cls, write_connection, override_if_exists=False):
         ''' Creates table for ObservableDatastoreMetadata model
         
-        Parameters:
-        -----------
         :param write_connection:
         :param override_if_exists: should the table be dropped if it exists
         :type override_if_exists: bool

@@ -32,7 +32,6 @@ class SessionFactory(object):
     def configure(cls, read_connection_url, write_connection_url):
         ''' Configure SessionFactory
         
-        **Parameters:**
         :param read_connection_url: sqlalchemy url of connection used for 
             reading
         :type read_connection_url: string
@@ -54,25 +53,22 @@ class SessionFactory(object):
         You have to configure the SessionFactory class before calling this
         method.
         
-        **Returns:**
         :return: orm session associated with read engine
         :rtype: sqlalchemy.orm.session.Session
         '''
         if not cls._configured:
-            raise RealtimeException(cls._configuration_error_msg)
+            raise RealtimeError(cls._configuration_error_msg)
         return cls._ReadSession()
-        
-    
+          
     @classmethod
     def get_write_session(cls):
         ''' Makes an sql alchemy orm session for writing.
         You have to configure the SessionFactory class before calling this
         method.
         
-        **Returns:**
         :return: orm session associated with write engine
         :rtype: sqlalchemy.orm.session.Session
         '''
         if not cls._configured:
-            raise RealtimeException(cls._configuration_error_msg)
+            raise RealtimeError(cls._configuration_error_msg)
         return cls._WriteSession()

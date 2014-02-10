@@ -1,6 +1,8 @@
 import logging
 
-import ckanext.datastore.db as db
+import ckanext.realtime.db as db
+import ckanext.realtime.logic.action as action
+
 import ckan.plugins as plugins
 
 log = logging.getLogger(__name__)
