@@ -1,44 +1,46 @@
+'''This module contains ckan API actions specific to ckanext-realtime. 
+
+The docstrings in this module are, for the most part, copied from
+ckanext-datastore.
+
+'''
 import logging
 
 import ckanext.realtime.db as db
-import ckan.plugins as p
-
 from ckanext.realtime.exc import RealtimeError
+from ckanext.realtime.event.event_dispatcher import EventDispatcher
+from ckanext.realtime.event.event_factory import EventFactory
 
 log = logging.getLogger(__name__)
 
-def observable_datastore_create(context, data_dict):
-    ''' Initiates Observable Datastore
+
+def realtime_broadcast_events(context, data_dict):
+    '''Broadcast events to registered listeners.
     
-    This action is based upon *datastore_create* action in the datastore extension.
-    
-    :param resource_id: resource id that the data is going to be stored against.
+    :param event_type: the type of the event
+    :type event_type: string
+    :param resource_id: the id of the resource to which the event belongs
+        (optional)
     :type resource_id: string
-    :param aliases: names for read only aliases of the resource. (optional)
-    :type aliases: list or comma separated string
-    :param fields: fields/columns and their extra metadata. (optional)
-    :type fields: list of dictionaries
-    :param records: the data, eg: [{"dob": "2005", "some_stuff": ["a", "b"]}]  (optional)
-    :type records: list of dictionaries
-    :param primary_key: fields that represent a unique key (optional)
-    :type primary_key: list or comma separated string
-    :param indexes: indexes on table (optional)
-    :type indexes: list or comma separated string
+    :param package_id: the id of the package to which the event belongs
+        (optional)
     
-    :returns: The newly created data object.
-    :rtype: dictionary
     '''
-    # No need to validate odatastore against different schema
-    # No need to create a separate auth function
-    result = p.toolkit.get_action('datastore_create')(context, data_dict)
+    events = EventFactory.build_events(data_dict)
+    EventDispatcher.dispatch(events)
+
+
+def datastore_make_observable(context, data_dict):
+    '''Changes a simple datastore to an observable datastore.
     
-    # Do the observable datastore creation specific things here
-    # do we need to have some extra metadata for odatastores?
-    # for starters, should just mark datastores as observable
-    success = db.mark_as_observable(data_dict['resource_id'])
+    :param resource_id: id of the resource to which the datastore is bound
+    :type resource_id: string
+    
+    '''
+    success = db.insert_observable_datastore_metadata(data_dict['resource_id'])
     if not success:
         raise RealtimeError('Marking the datastore as observable failed')
-    
-    log.info('Observable Datastore Created.')
-    
-    return result
+
+    db.add_datastore_notifier_trigger(db.SessionFactory.get_write_engine().url,
+                                      data_dict['resource_id'])
+

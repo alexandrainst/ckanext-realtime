@@ -13,8 +13,8 @@ import ckanext.realtime.db as db
 import ckan.tests as tests
 
 
-class TestRealtimeCreateActions(object):
-    ''' Tests for create actions ckanext.realtime.logic.action module
+class TestRealtimeActions(object):
+    ''' Tests for actions ckanext.realtime.logic.action module
     '''
     sysadmin_user = None
     normal_user = None
@@ -22,7 +22,6 @@ class TestRealtimeCreateActions(object):
     @classmethod
     def setup_class(cls):
         '''Nose runs this method once to setup our test class.'''        
-
         # Make the Paste TestApp that we'll use to simulate HTTP requests to
         # CKAN.
         cls.app = paste.fixture.TestApp(pylons.test.pylonsapp)
@@ -42,36 +41,45 @@ class TestRealtimeCreateActions(object):
         set_url_type(
             model.Package.get('annakarenina').resources, cls.sysadmin_user)
         
+        cls._create_test_datastore()
 
     
+    @classmethod
+    def _create_test_datastore(cls):
+        resource = model.Package.get('annakarenina').resources[0]
+        tests.call_action_api(cls.app, 'datastore_create',
+                              resource_id=resource.id,
+                              apikey=cls.sysadmin_user.apikey)
+
     @classmethod
     def teardown_class(cls):
         '''Nose runs this method once after all the test methods in our class
         have been run.
         '''
-#         rebuild_all_dbs(cls.Session)
+        rebuild_all_dbs(cls.Session)
         
         # unload plugins
-        p.unload('realtime')
         p.unload('datastore')
-    
-
+        p.unload('realtime')
         
-    def test_create_observable_ds_by_admin_succeeds(self):
+    def test_make_observable_by_admin(self):
         resource = model.Package.get('annakarenina').resources[0]
 
-        tests.call_action_api(self.app, 'observable_datastore_create', resource_id=resource.id,
-                              apikey=self.sysadmin_user.apikey)
-        
-    def test_create_observable_ds_by_normal_user_succeeds(self):
-        resource = model.Package.get('annakarenina').resources[0]
- 
-        tests.call_action_api(self.app, 'observable_datastore_create', resource_id=resource.id,
-                              apikey=self.normal_user.apikey)
-         
-         
-    def test_create_observable_ds_without_apikey_fails(self):
-        resource = model.Package.get('annakarenina').resources[0]
-        tests.call_action_api(self.app, 'observable_datastore_create', 
+        tests.call_action_api(self.app, 'datastore_make_observable',
                               resource_id=resource.id,
+                              apikey=self.sysadmin_user.apikey)
+
+    def test_make_observable_by_normal_user(self):
+        resource = model.Package.get('annakarenina').resources[0]
+  
+        tests.call_action_api(self.app, 'datastore_make_observable',
+                              resource_id=resource.id,
+                              event_type='datastore_update',
+                              apikey=self.normal_user.apikey)
+          
+    def test_make_observable_without_apikey(self):
+        resource = model.Package.get('annakarenina').resources[0]
+        tests.call_action_api(self.app, 'datastore_make_observable',
+                              resource_id=resource.id,
+                              event_type='datastore_update',
                               status=403)

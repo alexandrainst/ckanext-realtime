@@ -13,8 +13,9 @@ class RealtimePlugin(plugins.SingletonPlugin):
         
         This plugin builds upon ckanext-datastore.
     '''
-    plugins.implements(plugins.IActions)
     plugins.implements(plugins.IConfigurable, inherit=True)
+    plugins.implements(plugins.IActions)
+#     plugins.implements(plugins.IDomainObjectModification, inherit=True)
     
     def configure(self, config):
         ''' Configure the plugin - inherited from IConfigurable '''
@@ -27,6 +28,15 @@ class RealtimePlugin(plugins.SingletonPlugin):
         db.SessionFactory.configure(self.read_url, self.write_url)
         
         db.create_metadata_table(self.write_url)
+        db.create_datastore_notifier_trigger_function(self.write_url)
 
     def get_actions(self):
-        return {'observable_datastore_create': action.observable_datastore_create,}
+        return {'realtime_broadcast_events': action.realtime_broadcast_events,
+                'datastore_make_observable': action.datastore_make_observable
+                }
+        
+#     def notify(self, entity, operation):
+#         log.debug('domain object modification')
+#         log.debug(entity)
+#         log.debug(operation)
+#         
