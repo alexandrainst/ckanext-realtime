@@ -6,6 +6,7 @@ ckanext-datastore.
 '''
 import logging
 
+import ckan.plugins as p
 import ckanext.realtime.db as db
 from ckanext.realtime.exc import RealtimeError
 from ckanext.realtime.event.event_dispatcher import EventDispatcher
@@ -26,6 +27,8 @@ def realtime_broadcast_events(context, data_dict):
         (optional)
     
     '''
+    p.toolkit.check_access('realtime_broadcast_events', context, data_dict)
+    
     events = EventFactory.build_events(data_dict)
     EventDispatcher.dispatch(events)
 
@@ -37,6 +40,8 @@ def datastore_make_observable(context, data_dict):
     :type resource_id: string
     
     '''
+    p.toolkit.check_access('datastore_make_observable', context, data_dict)
+    
     success = db.insert_observable_datastore_metadata(data_dict['resource_id'])
     if not success:
         raise RealtimeError('Marking the datastore as observable failed')

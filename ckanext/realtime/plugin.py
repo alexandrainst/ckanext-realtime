@@ -2,6 +2,7 @@ import logging
 
 import ckanext.realtime.db as db
 import ckanext.realtime.logic.action as action
+import ckanext.realtime.logic.auth as auth
 
 import ckan.plugins as plugins
 
@@ -15,6 +16,7 @@ class RealtimePlugin(plugins.SingletonPlugin):
     '''
     plugins.implements(plugins.IConfigurable, inherit=True)
     plugins.implements(plugins.IActions)
+    plugins.implements(plugins.IAuthFunctions)
 #     plugins.implements(plugins.IDomainObjectModification, inherit=True)
     
     def configure(self, config):
@@ -33,6 +35,11 @@ class RealtimePlugin(plugins.SingletonPlugin):
     def get_actions(self):
         return {'realtime_broadcast_events': action.realtime_broadcast_events,
                 'datastore_make_observable': action.datastore_make_observable
+                }
+        
+    def get_auth_functions(self):
+        return {'realtime_broadcast_events': auth.realtime_broadcast_events,
+                'datastore_make_observable': auth.datastore_make_observable
                 }
         
 #     def notify(self, entity, operation):
