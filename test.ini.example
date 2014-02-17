@@ -1,0 +1,10 @@
+[app:main]
+use = config:../ckan/test-core.ini
+ckan.site_title = ckanext-realtime
+ckan.site_description = A test site for testing ckanext-realtime
+
+#provide valid sqlalchemy urls
+sqlalchemy.url = 
+
+ckan.datastore.write_url =  
+ckan.datastore.read_url = 

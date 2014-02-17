@@ -31,3 +31,6 @@ coverage.xml
 # Sphinx documentation
 docs/build/
 docs/Makefile
+
+#ckanext-realtime
+test.ini
