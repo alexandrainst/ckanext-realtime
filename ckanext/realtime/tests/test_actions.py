@@ -64,22 +64,60 @@ class TestRealtimeActions(object):
         
     def test_make_observable_by_admin(self):
         resource = model.Package.get('annakarenina').resources[0]
-
-        tests.call_action_api(self.app, 'datastore_make_observable',
-                              resource_id=resource.id,
-                              apikey=self.sysadmin_user.apikey)
-
-    def test_make_observable_by_normal_user(self):
-        resource = model.Package.get('annakarenina').resources[0]
   
         tests.call_action_api(self.app, 'datastore_make_observable',
                               resource_id=resource.id,
-                              event_type='datastore_update',
-                              apikey=self.normal_user.apikey)
-          
+                              apikey=self.sysadmin_user.apikey)
+ 
+    def test_make_observable_by_normal_user(self):
+        # should it really be 409?
+        resource = model.Package.get('annakarenina').resources[0]
+   
+        tests.call_action_api(self.app, 'datastore_make_observable',
+                              resource_id=resource.id,
+                              apikey=self.normal_user.apikey,
+                              status=409)
+           
     def test_make_observable_without_apikey(self):
         resource = model.Package.get('annakarenina').resources[0]
         tests.call_action_api(self.app, 'datastore_make_observable',
                               resource_id=resource.id,
+                              status=403)
+        
+    def test_make_observable_by_admin_bad_request(self):
+        tests.call_action_api(self.app, 'datastore_make_observable',
+                              apikey=self.sysadmin_user.apikey,
+                              status=409)
+                
+    def test_broadcast_events_by_admin(self):
+        resource = model.Package.get('annakarenina').resources[0]
+  
+        tests.call_action_api(self.app, 'realtime_broadcast_events',
+                              resource_id=resource.id,
+                              event_type='datastore_update',
+                              apikey=self.sysadmin_user.apikey)
+ 
+    def test_broadcast_events_by_normal_user(self):
+        # should it really be 409?
+        resource = model.Package.get('annakarenina').resources[0]
+   
+        tests.call_action_api(self.app, 'realtime_broadcast_events',
+                              resource_id=resource.id,
+                              event_type='datastore_update',
+                              apikey=self.normal_user.apikey,
+                              status=409)
+           
+    def test_broadcast_events_without_apikey(self):
+        resource = model.Package.get('annakarenina').resources[0]
+        tests.call_action_api(self.app, 'realtime_broadcast_events',
+                              resource_id=resource.id,
                               event_type='datastore_update',
                               status=403)
+        
+    def test_broadcast_events_by_admin_bad_request(self):
+        resource = model.Package.get('annakarenina').resources[0]
+ 
+        tests.call_action_api(self.app, 'realtime_broadcast_events',
+                              event_type='datastore_update',
+                              apikey=self.sysadmin_user.apikey,
+                              status=409)
