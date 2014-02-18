@@ -17,6 +17,10 @@ setup(
 	namespace_packages=['ckanext', 'ckanext.realtime'],
 	include_package_data=True,
 	zip_safe=False,
+	tests_require=[
+			'nose',
+	],
+	test_suite = 'nose.collector',
 	install_requires=[
 		# -*- Extra requirements: -*-
 	],
