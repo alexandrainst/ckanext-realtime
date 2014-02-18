@@ -34,7 +34,7 @@ class TestRealtimeActions(object):
         cls.sysadmin_user = model.User.get('testsysadmin')
         cls.normal_user = model.User.get('annafan')
         
-        engine = db._get_engine(config['ckan.datastore.write_url'])
+        engine = db.get_engine(config['ckan.datastore.write_url'])
         cls.Session = orm.scoped_session(orm.sessionmaker(bind=engine))
         
         # make test resource writable through action api

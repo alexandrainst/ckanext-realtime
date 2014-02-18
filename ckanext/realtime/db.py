@@ -65,7 +65,7 @@ def create_metadata_table(write_url):
     
     '''     
     try:
-        connection = _get_engine(write_url).connect()
+        connection = get_engine(write_url).connect()
         ObservableDatastoreMetadata.initiate_table(connection)
     finally:
         connection.close()
@@ -82,7 +82,7 @@ def add_datastore_notifier_trigger(write_url, resource_id):
     '''.format(res=resource_id)
     
     try:
-        connection = _get_engine(write_url).connect()
+        connection = get_engine(write_url).connect()
         connection.execute(sql)
     finally:
         connection.close()
@@ -106,13 +106,13 @@ def create_datastore_notifier_trigger_function(write_url):
     """
     
     try:
-        connection = _get_engine(write_url).connect()
+        connection = get_engine(write_url).connect()
         connection.execute(sql)
     finally:
         connection.close()
 
 
-def _get_engine(connection_url):
+def get_engine(connection_url):
     '''Get either read or write engine.'''
     engine = _engines.get(connection_url)
 
@@ -145,10 +145,10 @@ class SessionFactory(object):
         '''
         cls._configured = True
         
-        cls._read_engine = _get_engine(read_connection_url)
+        cls._read_engine = get_engine(read_connection_url)
         cls._ReadSession.configure(bind=cls._read_engine)
             
-        cls._write_engine = _get_engine(write_connection_url)
+        cls._write_engine = get_engine(write_connection_url)
         cls._WriteSession.configure(bind=cls._write_engine)
     
     @classmethod
