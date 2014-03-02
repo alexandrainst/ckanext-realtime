@@ -35,3 +35,5 @@ paster db init -c "$PROJECT_DIR"/test-core.ini
 psql -c 'CREATE USER datastore_default;' -U postgres
 sed -i -e 's/.*datastore.read_url.*/ckan.datastore.read_url = postgresql:\/\/datastore_default@\/datastore_test/' test-core.ini
 paster datastore set-permissions postgres -c "$PROJECT_DIR"/test-core.ini
+
+cd -
