@@ -24,6 +24,7 @@ mkdir links
 PROJECT_DIR="`pwd`"
 CKAN_DIR="`python -c'import ckan; print ckan.__file__.rsplit("/",2)[0]'`"
 cd "$CKAN_DIR"
+paster make-config ckan development.ini --no-interactive
 sed -i -e 's/^sqlalchemy.url.*/sqlalchemy.url = postgresql:\/\/ckantest:pass@localhost\/ckantest/' development.ini
 sed -i -e 's/.*datastore.write_url.*/ckan.datastore.write_url = postgresql:\/\/ckantest:pass@localhost\/datastore/' development.ini
 ln -s "$CKAN_DIR"/test-core.ini "$PROJECT_DIR"/links/test-core.ini
