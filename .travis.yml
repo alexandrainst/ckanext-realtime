@@ -11,5 +11,5 @@ install:
 before_install: bash bin/travis-before-install.sh
 script: 
   - nosetests --with-pylons=links/test-core.ini
-  - coverage run --source ckanext.realtime nosetests --with-pylons=links/test-core.ini
+  - nosetests  --with-coverage --cover-package=ckanext.realtime --with-pylons=links/test-core.ini
 after_success:  coveralls
