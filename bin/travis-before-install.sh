@@ -4,7 +4,7 @@
 sudo apt-get update -q
 sudo apt-get install solr-jetty
 pip install -e 'git+https://github.com/okfn/ckan.git@ckan-2.2#egg=ckan'
-pip install -r ~/virtualenv/python2.7/src/ckan/pip-requirements.txt
+pip install -r ~/virtualenv/python2.7/src/ckan/requirements.txt
 
 # ckanext-realtime
 python setup.py develop
