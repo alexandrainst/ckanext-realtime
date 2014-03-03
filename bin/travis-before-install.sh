@@ -30,8 +30,8 @@ sed -i -e 's/.*datastore.write_url.*/ckan.datastore.write_url = postgresql:\/\/c
 ln -s "$CKAN_DIR"/test-core.ini "$PROJECT_DIR"/links/test-core.ini
 ln -s "$CKAN_DIR"/development.ini "$PROJECT_DIR"/links/development.ini
 ln -s "$CKAN_DIR"/who.ini "$PROJECT_DIR"/links/who.ini
-paster db init -c "$PROJECT_DIR"/test-core.ini
+paster db init -c "$PROJECT_DIR"/links/test-core.ini
 
 psql -c 'CREATE USER datastore_default;' -U postgres
-sed -i -e 's/.*datastore.read_url.*/ckan.datastore.read_url = postgresql:\/\/datastore_default@\/datastore_test/' test-core.ini
-paster datastore set-permissions postgres -c "$PROJECT_DIR"/test-core.ini
+sed -i -e 's/.*datastore.read_url.*/ckan.datastore.read_url = postgresql:\/\/datastore_default@\/datastore_test/' links/test-core.ini
+paster datastore set-permissions postgres -c "$PROJECT_DIR"/links/test-core.ini
