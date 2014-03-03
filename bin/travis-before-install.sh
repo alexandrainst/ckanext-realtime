@@ -31,14 +31,13 @@ sed -i -e 's/.*datastore.write_url.*/ckan.datastore.write_url = postgresql:\/\/c
 
 sed -i -e 's/^sqlalchemy.url.*/sqlalchemy.url = postgresql:\/\/ckan_default:pass@localhost\/ckan_default/' test-core.ini
 sed -i -e 's/.*datastore.write_url.*/ckan.datastore.write_url = postgresql:\/\/ckan_default:pass@localhost\/datastore_default/' test-core.ini
+sed -i -e 's/.*datastore.read_url.*/ckan.datastore.read_url = postgresql:\/\/datastore_default@\/datastore_default/' test-core.ini
 
 ln -s "$CKAN_DIR"/test-core.ini "$PROJECT_DIR"/links/test-core.ini
 ln -s "$CKAN_DIR"/development.ini "$PROJECT_DIR"/links/development.ini
 ln -s "$CKAN_DIR"/who.ini "$PROJECT_DIR"/links/who.ini
 ls "$PROJECT_DIR"/links
 cat "$PROJECT_DIR"/links/test-core.ini
-paster db init -c "$PROJECT_DIR"/links/test-core.ini
 
-psql -c 'CREATE USER datastore_default;' -U postgres
-sed -i -e 's/.*datastore.read_url.*/ckan.datastore.read_url = postgresql:\/\/datastore_default@\/datastore_default/' "$PROJECT_DIR"/links/test-core.ini
+paster db init -c "$PROJECT_DIR"/links/test-core.ini
 paster datastore set-permissions postgres -c "$PROJECT_DIR"/links/test-core.ini

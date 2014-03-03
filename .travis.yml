@@ -8,4 +8,4 @@ env:
   
 before_install: bash bin/travis-before-install.sh
   
-script: nosetests
+script: nosetests --with-pylons=links/test-core.ini
