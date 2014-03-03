@@ -36,7 +36,7 @@ sed -i -e 's/.*datastore.read_url.*/ckan.datastore.read_url = postgresql:\/\/dat
 ln -s "$CKAN_DIR"/test-core.ini "$PROJECT_DIR"/links/test-core.ini
 ln -s "$CKAN_DIR"/development.ini "$PROJECT_DIR"/links/development.ini
 ln -s "$CKAN_DIR"/who.ini "$PROJECT_DIR"/links/who.ini
-ls "$PROJECT_DIR"/links
+
 cat "$PROJECT_DIR"/links/test-core.ini
 
 paster db init -c "$PROJECT_DIR"/links/test-core.ini
