@@ -6,6 +6,6 @@ services:
 env:
   - PGVERSION=9.1
   
-before_install: ./bin/travis-before-install.sh
+before_install: bash bin/travis-before-install.sh
   
 script: nosetests
