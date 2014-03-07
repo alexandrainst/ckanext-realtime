@@ -1,6 +1,7 @@
 import logging
 
 import ckanext.realtime.db as db
+import ckanext.realtime.event.event_dispatcher as evt
 import ckanext.realtime.logic.action as action
 import ckanext.realtime.logic.auth as auth
 
@@ -28,6 +29,7 @@ class RealtimePlugin(plugins.SingletonPlugin):
         self.write_url = self.config['ckan.datastore.write_url']
         
         db.SessionFactory.configure(self.read_url, self.write_url)
+        evt.EventDispatcher.configure('127.0.0.1', 6379)
         
         db.create_metadata_table(self.write_url)
         db.create_datastore_notifier_trigger_function(self.write_url)
@@ -41,7 +43,7 @@ class RealtimePlugin(plugins.SingletonPlugin):
         return {'realtime_broadcast_events': auth.realtime_broadcast_events,
                 'datastore_make_observable': auth.datastore_make_observable
                 }
-        
+
 #     def notify(self, entity, operation):
 #         log.debug('domain object modification')
 #         log.debug(entity)

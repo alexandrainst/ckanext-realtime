@@ -1,0 +1,23 @@
+#!/usr/bin/env python2
+'''Sample event redis subscriber. It listens for realtime events'''
+from ckanext.realtime.event.event_processor import EventProcessor
+import ckanext.realtime.event.datastore as datastore_evt
+
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = 6379
+
+def main():
+    processor = EventProcessor(REDIS_HOST,
+                               REDIS_PORT,
+                               event_processor_func=process)
+    
+    processor.subscribe([datastore_evt.DatastoreInsertEvent])
+    processor.run()
+
+
+def process(event):
+    print event
+
+
+if __name__ == '__main__':
+    main()
