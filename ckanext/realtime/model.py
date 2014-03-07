@@ -28,6 +28,6 @@ class ObservableDatastoreMetadata(Base):
         Base.metadata.create_all(write_connection, [cls.__table__])
     
     def __repr__(self):
-        return '{0}(uuid={1}) '.format(self.__class__, self.uuid)
+        return "{0}(uuid='{1}')".format(self.__class__, self.uuid)
 
 
