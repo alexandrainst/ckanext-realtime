@@ -26,6 +26,11 @@ class TestRealtimeActions(object):
         # CKAN.
         cls.app = paste.fixture.TestApp(pylons.test.pylonsapp)
 
+        
+        engine = db.get_engine(config['ckan.datastore.write_url'])
+        cls.Session = orm.scoped_session(orm.sessionmaker(bind=engine))
+        
+        rebuild_all_dbs(cls.Session)
         p.load('datastore')
         p.load('realtime')
         
@@ -33,9 +38,6 @@ class TestRealtimeActions(object):
         
         cls.sysadmin_user = model.User.get('testsysadmin')
         cls.normal_user = model.User.get('annafan')
-        
-        engine = db.get_engine(config['ckan.datastore.write_url'])
-        cls.Session = orm.scoped_session(orm.sessionmaker(bind=engine))
         
         # make test resource writable through action api
         set_url_type(
