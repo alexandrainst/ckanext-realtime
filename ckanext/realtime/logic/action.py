@@ -61,10 +61,6 @@ def datastore_make_observable(context, data_dict):
         raise p.toolkit.ValidationError(errors)
     
     p.toolkit.check_access('datastore_make_observable', context, data_dict)
-    
-    success = db.insert_observable_datastore_metadata(data_dict['resource_id'])
-    if not success:
-        raise RealtimeError('Marking the datastore as observable failed')
 
     db.add_datastore_notifier_trigger(db.SessionFactory.get_write_engine().url,
                                       data_dict['resource_id'])

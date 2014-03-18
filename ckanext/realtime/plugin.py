@@ -31,7 +31,6 @@ class RealtimePlugin(plugins.SingletonPlugin):
         db.SessionFactory.configure(self.read_url, self.write_url)
         evt.EventDispatcher.configure('127.0.0.1', 6379)
         
-        db.create_metadata_table(self.write_url)
         db.create_datastore_notifier_trigger_function(self.write_url)
 
     def get_actions(self):
