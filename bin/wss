@@ -1,0 +1,36 @@
+#!/usr/bin/env python2
+'''Twisted-powered(autobahn & txredis) WebSocket server for ckanext-realtime.
+
+This server listens for realtime events from Redis (pub/sub) and sends them to 
+WebSocket clients.
+
+'''
+from __future__ import absolute_import
+import sys
+from twisted.internet import reactor
+from twisted.python import log
+import ckanext.realtime.event.datastore as de
+import ckanext.realtime.twisted.websocket as ws
+import ckanext.realtime.twisted.redis as rd
+
+
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = 6379
+WSS_URL = 'ws://127.0.0.1:9000'
+
+def main():
+    events_for_subscribing = [de.DatastoreInsertEvent,
+                              de.DatastoreDeleteEvent,
+                              de.DatastoreUpdateEvent]
+    log.startLogging(sys.stdout)
+    websocket_factory = ws.CkanWebSocketServerFactory(WSS_URL)
+    websocket_factory.listen()
+    rd.connect_event_processor(REDIS_HOST,
+                               REDIS_PORT,
+                               websocket_factory,
+                               events_for_subscribing)
+    reactor.run()
+
+
+if __name__ == '__main__':
+    main()
