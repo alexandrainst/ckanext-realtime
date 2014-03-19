@@ -16,7 +16,7 @@ def add_datastore_notifier_trigger(write_url, resource_id):
         DROP TRIGGER IF EXISTS "{res}_notifier" ON "{res}" RESTRICT;
     
         CREATE TRIGGER "{res}_notifier"
-        BEFORE INSERT OR UPDATE OR DELETE ON  "{res}"
+        AFTER INSERT OR UPDATE OR DELETE ON "{res}"
         FOR EACH ROW
         EXECUTE PROCEDURE datastore_notifier();
     '''.format(res=resource_id)
@@ -38,7 +38,7 @@ def create_datastore_notifier_trigger_function(write_url):
     sql = """
         CREATE OR REPLACE FUNCTION "public"."datastore_notifier" () RETURNS trigger AS 'BEGIN
             EXECUTE ''NOTIFY ckanextrealtime, '''''' || TG_OP || '' '' || TG_TABLE_NAME || '''''';'';
-            RETURN NULL;
+            RETURN NEW;
         END' LANGUAGE "plpgsql" COST 100
         VOLATILE
         CALLED ON NULL INPUT
