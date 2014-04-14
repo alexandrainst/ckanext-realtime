@@ -76,7 +76,7 @@ def main(config):
     print "Waiting for notifications on channel 'chanextrealtime'"
     while 1:
         if select.select([conn],[],[],5) == ([],[],[]):  #5 second timeout
-            print "."
+            pass
         else:
             conn.poll()
             while conn.notifies:
