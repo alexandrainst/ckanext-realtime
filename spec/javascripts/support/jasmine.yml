@@ -1,4 +1,3 @@
-
 # src_files
 #
 # Return an array of filepaths relative to src_dir to include before jasmine specs.
@@ -12,8 +11,8 @@
 #   - dist/**/*.js
 #
 src_files:
-    - Player.js
-    - Song.js
+  - Player.js
+  - Song.js
 
 # stylesheets
 #
@@ -27,6 +26,7 @@ src_files:
 #   - stylesheets/*.css
 #
 stylesheets:
+  - stylesheets/**/*.css
 
 # helpers
 #
@@ -39,7 +39,7 @@ stylesheets:
 #   - helpers/**/*.js
 #
 helpers:
-  - "helpers/**/*.js"
+  - 'javascripts/helpers/**/*.js'
 
 # spec_files
 #
@@ -52,8 +52,7 @@ helpers:
 #   - **/*[sS]pec.js
 #
 spec_files:
-  - "**/*[Ss]pec.js"
-
+  - '**/*[sS]pec.js'
 
 # src_dir
 #
@@ -64,7 +63,7 @@ spec_files:
 #
 # src_dir: public
 #
-src_dir:  client
+src_dir: client
 
 # spec_dir
 #
@@ -75,4 +74,40 @@ src_dir:  client
 #
 # spec_dir: spec/javascripts
 #
-spec_dir: spec/javascripts
+spec_dir: spec
+
+# spec_helper
+#
+# Ruby file that Jasmine server will require before starting.
+# Returned relative to your root path
+# Default spec/javascripts/support/jasmine_helper.rb
+#
+# EXAMPLE:
+#
+# spec_helper: spec/javascripts/support/jasmine_helper.rb
+#
+spec_helper: spec/javascripts/support/jasmine_helper.rb
+
+# boot_dir
+#
+# Boot directory path. Your boot_files must be returned relative to this path.
+# Default: Built in boot file
+#
+# EXAMPLE:
+#
+# boot_dir: spec/javascripts/support/boot
+#
+boot_dir:
+
+# boot_files
+#
+# Return an array of filepaths relative to boot_dir to include in order to boot Jasmine
+# Default: Built in boot file
+#
+# EXAMPLE
+#
+# boot_files:
+#   - '**/*.js'
+#
+boot_files:
+

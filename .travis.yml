@@ -11,5 +11,5 @@ install:
 before_install: bash bin/travis-before-install.sh
 script: 
   - nosetests  --with-coverage --cover-package=ckanext.realtime --with-pylons=links/test-core.ini
-  - jasmine-ci
+  - rake jasmine:ci
 after_success:  coveralls
