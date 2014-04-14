@@ -2,8 +2,6 @@ import logging
 
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.sql import exists
 
 from ckanext.realtime.exc import RealtimeError
 
