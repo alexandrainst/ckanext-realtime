@@ -8,6 +8,7 @@ import logging
 
 import ckan.lib.navl.dictization_functions
 import ckan.plugins as p
+import ckan.model as model
 import ckanext.realtime.db as db
 from ckanext.realtime.exc import RealtimeError
 from ckanext.realtime.event.event_dispatcher import EventDispatcher
@@ -64,4 +65,24 @@ def datastore_make_observable(context, data_dict):
 
     db.add_datastore_notifier_trigger(db.SessionFactory.get_write_engine().url,
                                       data_dict['resource_id'])
+    
+    
+def realtime_check_apikey(context, data_dict):
+    schema = context.get('schema',
+                         realtime_schema.realtime_check_apikey_schema())
+    
+    data_dict, errors = _validate(data_dict, schema, context)
+    if errors:
+        raise p.toolkit.ValidationError(errors)
+    
+    p.toolkit.check_access('realtime_check_apikey', context, data_dict)
+    
+    query = model.Session.query(model.User)
+    user = query.filter_by(apikey=data_dict['apikey']).first()
+    log.info('Checking api key: ' + data_dict['apikey'])
+    log.info(user)
+    if user:
+        return {'auth': True}
+    else:
+        return {'auth': False}
 

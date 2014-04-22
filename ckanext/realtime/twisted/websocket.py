@@ -1,15 +1,18 @@
 import autobahn.twisted.websocket as ws
 from twisted.python import log
 
+from ckanext.realtime.client_handler import ClientMessageHandler
+
 class CkanWebSocketServerFactory(ws.WebSocketServerFactory):
     '''Twisted server factory for CKAN WebSocket protocols'''
     
-    def __init__(self, url, debug=False, debugCodePaths=False):
+    def __init__(self, url, api_url, apikey, test, debug=False, debugCodePaths=False):
         ws.WebSocketServerFactory.__init__(self, url, debug=debug, 
                                         debugCodePaths=debugCodePaths)
         self.clients = []
         self.protocol = CkanWebSocketServerProtocol
         self.setProtocolOptions(allowHixie76=True)
+        self.client_handler = ClientMessageHandler(api_url, apikey, test)
     
     def listen(self):
         '''Listen for incoming WebSocket connections'''
@@ -30,6 +33,9 @@ class CkanWebSocketServerFactory(ws.WebSocketServerFactory):
         for c in self.clients:
             c.sendMessage(msg.encode('utf8'))
             log.msg("message sent to {}".format(c.peer))
+            
+    def handle_message(self, msg):
+        return self.client_handler.handle_message(msg)
     
     
 class CkanWebSocketServerProtocol(ws.WebSocketServerProtocol):
@@ -40,8 +46,13 @@ class CkanWebSocketServerProtocol(ws.WebSocketServerProtocol):
     def onMessage(self, msg, binary):
         if binary:
             return
-        log.msg(msg)
-        self.sendMessage('good day to you madam')
+        log.msg('request: ' + msg)
+        
+        result = self.factory.handle_message(msg)
+        log.msg(result)
+        if result and isinstance(result, basestring):
+            log.msg('response: ' + result)
+            self.sendMessage(result)
     
     def connectionLost(self, reason):
         ws.WebSocketServerProtocol.connectionLost(self, reason)

@@ -11,8 +11,7 @@
 #   - dist/**/*.js
 #
 src_files:
-  - Player.js
-  - Song.js
+  - CkanRT.js
 
 # stylesheets
 #

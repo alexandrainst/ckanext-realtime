@@ -6,9 +6,14 @@ WebSocket clients.
 
 '''
 from __future__ import absolute_import
+
+import argparse
+import ConfigParser
 import sys
+
 from twisted.internet import reactor
 from twisted.python import log
+
 import ckanext.realtime.event.datastore as de
 import ckanext.realtime.twisted.websocket as ws
 import ckanext.realtime.twisted.redis as rd
@@ -18,12 +23,15 @@ REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
 WSS_URL = 'ws://127.0.0.1:9000'
 
-def main():
+def main(config, test):
+    apikey = config.get('app:main', 'ckan.realtime.apikey')
+    ckan_api_url = config.get('app:main', 'ckan.realtime.ckan_api_url')
+    
     events_for_subscribing = [de.DatastoreInsertEvent,
                               de.DatastoreDeleteEvent,
                               de.DatastoreUpdateEvent]
     log.startLogging(sys.stdout)
-    websocket_factory = ws.CkanWebSocketServerFactory(WSS_URL)
+    websocket_factory = ws.CkanWebSocketServerFactory(WSS_URL, ckan_api_url, apikey, test)
     websocket_factory.listen()
     rd.connect_event_processor(REDIS_HOST,
                                REDIS_PORT,
@@ -33,4 +41,16 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Run CKAN WebSocket server')
+    
+    parser.add_argument("config")
+    # this flag is used for client testing sessions - it enables the 
+    # WebSocket server to provide fake replies to the clients, in some cases
+    parser.add_argument('--test', dest='test', action='store_true')
+    parser.set_defaults(test=False)
+    args = parser.parse_args()
+    
+    config = ConfigParser.RawConfigParser()
+    config.read(args.config)
+    
+    main(config, args.test)

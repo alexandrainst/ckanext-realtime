@@ -5,27 +5,29 @@ Listen for events from datastore tables using PostgreSQL LISTEN/NOTIFY.
 '''
 
 import argparse
+import ConfigParser
 import json
 import psycopg2.extensions
 import requests
 import select
-import ConfigParser
+import urlparse
+
 
 import ckanext.realtime.db as db
 
-def call_ckan_api(notify, ckan_api_url, api_key):
+def call_ckan_api(notify, ckan_api_url, apikey):
     '''Parses NOTIFY packages and forwards the info to ckan api.
     
     :param notify: NOTIFY package issued from datastore
     :param ckan_api_url: action api endpoint
         (E.g. 'http://localhost:5000/api/3/action/')
     
-    :param api_key: ckan api key for this script, used to call
+    :param apikey: ckan api key for this script, used to call
         'realtime_broadcast_events' action
         
     '''
-    url = ckan_api_url + 'realtime_broadcast_events'
-    auth_header = {'Authorization': api_key,
+    url = urlparse.urljoin(ckan_api_url, 'realtime_broadcast_events')
+    auth_header = {'Authorization': apikey,
                    'content-type': 'application/json'}
     
     print type(notify)
@@ -65,7 +67,7 @@ def make_connection(sqlalchemy_url):
 
 def main(config):
     datastore_url = config.get('app:main', 'ckan.datastore.read_url')
-    api_key = config.get('app:main', 'ckan.realtime.datastore_listener_api_key')
+    apikey = config.get('app:main', 'ckan.realtime.apikey')
     ckan_api_url = config.get('app:main', 'ckan.realtime.ckan_api_url')
 
     conn = make_connection(datastore_url)
@@ -73,7 +75,7 @@ def main(config):
     curs = conn.cursor()
     curs.execute("LISTEN ckanextrealtime;")
 
-    print "Waiting for notifications on channel 'chanextrealtime'"
+    print "Waiting for notifications on channel 'ckanextrealtime'"
     while 1:
         if select.select([conn],[],[],5) == ([],[],[]):  #5 second timeout
             pass
@@ -82,7 +84,7 @@ def main(config):
             while conn.notifies:
                 notify = conn.notifies.pop()
                 print "Got NOTIFY:", notify.pid, notify.channel, notify.payload
-                call_ckan_api(notify, ckan_api_url, api_key)
+                call_ckan_api(notify, ckan_api_url, apikey)
                 
 
 if __name__ == '__main__':
