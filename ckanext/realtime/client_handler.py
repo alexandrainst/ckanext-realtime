@@ -14,11 +14,13 @@ class ClientMessageHandler(object):
         response = None
         if request['type'] == 'auth':
             response = self._authenticate(request)
-        
+        elif request['type'] == 'datastoresubscribe':
+            response = self._datastore_subscribe(request)
+        elif request['type'] == 'datastoreunsubscribe':
+            response = self._datastore_unsubscribe(request)
         if response:
             response = jsonpickle.encode(response)
-        else:
-            return 'good day to you madam'
+            
         return response
     
     def _authenticate(self, request):
@@ -45,3 +47,33 @@ class ClientMessageHandler(object):
         if response['result']['auth']:
             return True
         return False
+    
+    def _datastore_subscribe(self, request):
+        if not self.test:
+            pass
+        elif self.test:
+            if request['resource_id'] == 'observableResource':
+                return {'type': 'datastoresubscribe', 'resource_id': request['resource_id'], 'result': 'SUCCESS'}
+            elif request['resource_id'] == 'nonObservableResource':
+                return {'type': 'datastoresubscribe', 'resource_id': request['resource_id'], 'result': 'FAIL'}
+            elif request['resource_id'] == 'nonDatastoreResource':
+                return {'type': 'datastoresubscribe', 'resource_id': request['resource_id'], 'result': 'NOT-A-DATASTORE'}
+            elif request['resource_id'] == 'invalidResource':
+                return {'type': 'datastoresubscribe', 'resource_id': request['resource_id'], 'result': 'INVALID-RESOURCE'}
+            else:
+                return None
+
+    def _datastore_unsubscribe(self, request):
+        if not self.test:
+            pass
+        elif self.test:
+            if request['resource_id'] == 'observableResource':
+                return {'type': 'datastoreunsubscribe', 'resource_id': request['resource_id'], 'result': 'SUCCESS'}
+            elif request['resource_id'] == 'nonObservableResource':
+                return {'type': 'datastoreunsubscribe', 'resource_id': request['resource_id'], 'result': 'FAIL'}
+            elif request['resource_id'] == 'nonDatastoreResource':
+                return {'type': 'datastoreunsubscribe', 'resource_id': request['resource_id'], 'result': 'NOT-A-DATASTORE'}
+            elif request['resource_id'] == 'invalidResource':
+                return {'type': 'datastoreunsubscribe', 'resource_id': request['resource_id'], 'result': 'INVALID-RESOURCE'}
+            else:
+                return None
