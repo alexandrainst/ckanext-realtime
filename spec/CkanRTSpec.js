@@ -3,48 +3,159 @@
  * datastore listener and ckan to be running.
  */
 var wsUri = "ws://127.0.0.1:9000/";
+var PAUSE_BEFORE_RECONNECT = 500;
 describe("CkanRT", function() {
+	var rt;
+		
+	//should close the websocket after each expectation
+	afterEach(function() {
+		rt.websocket.close();
+	});
+	
+	describe("authentication", function() {
+		// the authentication process should be completed with success for the following expectations to work
+		describe("when a valid ckan api key is provided", function() {
+			beforeEach(function(done) {
+				rt = new CkanRT(wsUri);
+				rt.websocket.onopen = function(evt) {
+					rt.authenticate("correctKey");
+					setTimeout(function() {
+						done();
+					}, PAUSE_BEFORE_RECONNECT);
+				};
+			});
 
-	describe("successful authentication", function() {
-		var rt;
+			it("should succeed", function() {
+				expect(rt.authenticated).toEqual(true);
+			});
+		});
+
+		describe("when an invalid ckan api key is provided", function() {
+			// the authentication process should be completed with failure for the following expectations to work
+			beforeEach(function(done) {
+				rt = new CkanRT(wsUri);
+				rt.websocket.onopen = function(evt) {
+					rt.authenticate("incorrectKey");
+					setTimeout(function() {
+						done();
+					}, PAUSE_BEFORE_RECONNECT);
+				};
+			});
+
+			it("should fail", function() {
+				expect(rt.authenticated).toEqual(false);
+			});
+		});
+	});
+
+	//TODO: this one might actually need to go through ajax instead of WebSocket
+	describe("checking if datastores are observable", function() {
+		// the authentication process should be completed with success for the following expectations to work
 		beforeEach(function(done) {
 			rt = new CkanRT(wsUri);
 			rt.websocket.onopen = function(evt) {
 				rt.authenticate("correctKey");
 				setTimeout(function() {
 					done();
-				}, 1000);
+				}, PAUSE_BEFORE_RECONNECT);
 			};
 		});
 
-		it("should succeed within 1 second", function() {
-			expect(rt.authenticated).toEqual(true);
+		describe("when you check observable datastores", function() {
+			it("should give possitive answer", function() {
+				expect(true).toEqual(false);
+			});
 		});
 
-		afterEach(function() {
-			rt.websocket.close();
+		describe("when you check non-observable datastores", function() {
+			it("should give negative answer", function() {
+				expect(true).toEqual(false);
+			});
 		});
+
+		describe("when you check non-datastore resources", function() {
+			it("should indicate error", function() {
+				expect(true).toEqual(false);
+			});
+		});
+
+		describe("when you check invalid resources", function() {
+			it("should indicate error", function() {
+				expect(true).toEqual(false);
+			});
+		});
+
 	});
-
-	describe("unsuccessful authentication", function() {
-		var rt;
+	
+	//TODO: this one might actually need to go through ajax instead of WebSocket
+	describe("making resources observable", function() {
+		// the authentication process should be completed with success for the following expectations to work
 		beforeEach(function(done) {
 			rt = new CkanRT(wsUri);
 			rt.websocket.onopen = function(evt) {
-				rt.authenticate("incorrectKey");
+				rt.authenticate("correctKey");
 				setTimeout(function() {
 					done();
-				}, 1000);
+				}, PAUSE_BEFORE_RECONNECT);
 			};
 		});
+		describe("when a resource is a non-observable datastore", function(){
+			it ("should succeed", function() {
+				expect(true).toEqual(false);
+			});
+		});
+		
+		describe("when a resource is an observable datastore", function() {
+			it("should indicate failure", function() {
+				expect(true).toEqual(false);
+			});
+		});
+		
+		describe("when a resource isn't a datastore", function() {
+			it("should indicate failure", function(){
+				expect(true).toEqual(false);
+			});
+		});
+	});
 
-		it("should fail within 1 second", function() {
-			expect(rt.authenticated).toEqual(false);
+	describe("subscribing/unsubscribing from observable datastores", function() {
+		// the authentication process should be completed with success for the following expectations to work
+		beforeEach(function(done) {
+			rt = new CkanRT(wsUri);
+			rt.websocket.onopen = function(evt) {
+				rt.authenticate("correctKey");
+				setTimeout(function() {
+					done();
+				}, PAUSE_BEFORE_RECONNECT);
+			};
+		});
+		
+		describe("when you subscribe/unsubscribe from observable datastores", function() {
+			it("should succeed", function() {
+				expect(true).toEqual(false);
+			});
+		});
+
+		describe("when you subscribe/unsubscribe from non-observable datastores", function() {
+			it("should fail", function() {
+				expect(true).toEqual(false);
+			});
+		});
+
+		describe("when you subscribe/unsubscribe from non-datastore resources", function() {
+			it("should fail with error", function() {
+				expect(true).toEqual(false);
+			});
+		});
+
+		describe("when you subscribe/subscribe from invalid resources", function() {
+			it("should fail with error", function() {
+				expect(true).toEqual(false);
+			});
 		});
 
 		afterEach(function() {
 			rt.websocket.close();
 		});
 	});
-
 });

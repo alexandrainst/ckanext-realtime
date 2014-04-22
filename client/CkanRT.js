@@ -22,11 +22,19 @@ CkanRT.prototype.init = function() {
 };
 
 CkanRT.prototype.datastoreSubscribe = function(resourceId) {
-	//subscribe to the realtime datastore specified by the resourceId
+	//TODO: implement
 };
 
 CkanRT.prototype.datastoreUnsubscribe = function(resourceId) {
+	//TODO: implement
+};
 
+CkanRT.prototype.isDatastoreObservable = function(resourceId) {
+	//TODO: implement
+};
+
+CkanRT.prototype.datastoreMakeObservable = function(resourceId) {
+	//TODO: implement
 };
 
 CkanRT.prototype.authenticate = function(apiKey) {
