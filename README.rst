@@ -5,9 +5,6 @@ ckanext-realtime
 	:target: https://travis-ci.org/alexandrainst/ckanext-realtime
 .. image:: https://coveralls.io/repos/alexandrainst/ckanext-realtime/badge.png
 	:target: https://coveralls.io/r/alexandrainst/ckanext-realtime
-.. image:: https://badge.fury.io/gh/alexandrainst%2Fckanext-realtime.png
-    :target: http://badge.fury.io/gh/alexandrainst%2Fckanext-realtime
-
 
 *ckanext-realtime* is CKAN extension which enables CKAN to serve realtime data.
 
