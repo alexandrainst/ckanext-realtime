@@ -47,8 +47,75 @@
             
   <div class="section" id="ckanext-realtime">
 <h1>ckanext-realtime<a class="headerlink" href="#ckanext-realtime" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://travis-ci.org/alexandrainst/ckanext-realtime"><img alt="https://travis-ci.org/alexandrainst/ckanext-realtime.png?branch=master" src="https://travis-ci.org/alexandrainst/ckanext-realtime.png?branch=master" /></a>
+<a class="reference external image-reference" href="https://coveralls.io/r/alexandrainst/ckanext-realtime"><img alt="https://coveralls.io/repos/alexandrainst/ckanext-realtime/badge.png" src="https://coveralls.io/repos/alexandrainst/ckanext-realtime/badge.png" /></a>
 <p><em>ckanext-realtime</em> is CKAN extension which enables CKAN to serve realtime data.</p>
 <p><strong>This extension is currently in the initial development stages. Please submit your ideas and PRs if you would like to contribute.</strong></p>
+<div class="section" id="utilities-included">
+<h2>Utilities included<a class="headerlink" href="#utilities-included" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>CKAN extension which enables observable datastores</li>
+<li>Datastore listener script (bin/datastore_listener)</li>
+<li>WebSocket server (bin/wss)</li>
+<li>JavaScript library for communication with the realtime CKAN (client/CkanRT.js)</li>
+</ol>
+</div>
+<div class="section" id="environment">
+<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this headline">¶</a></h2>
+<p>The development work was done on an <strong>Arch Linux</strong> machine but it should work
+with any unix like OS (travis CI builds the project on <strong>Ubuntu</strong>). That Said, you will need:</p>
+<ol class="arabic simple">
+<li>Redis Server</li>
+<li>CKAN (tested on 2.2 but it should work with earlier minor releases as well).</li>
+</ol>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Install the plugin</p>
+<blockquote>
+<div><p><em>$ python setup.py develop</em></p>
+</div></blockquote>
+</li>
+<li><p class="first">Install the requirements</p>
+<blockquote>
+<div><p><em>$ pip install -r requirements.txt</em></p>
+</div></blockquote>
+</li>
+<li><p class="first">Set ckanext-realtime specific configuration options in you ckan config (e.g. /etc/ckan/default/production.ini):</p>
+<blockquote>
+<div><p><em># ckanext-realtime settings</em></p>
+<p><em>ckan.realtime.ckan_api_url = http://localhost:5000/api/3/action/ #at what url can the Action API be reached</em></p>
+<p><em>ckan.realtime.apikey = &lt;api key&gt;       # admin API key to be used by WebSocket server and datastore listener</em></p>
+</div></blockquote>
+</li>
+<li><p class="first">Enable the plugin in the CKAN configuration file:</p>
+<blockquote>
+<div><p><em>ckan.plugin = ... datastore realtime # datastore plugin is a requirement for the realtime plugin</em></p>
+</div></blockquote>
+</li>
+<li><p class="first">Copy test.ini.example to test.ini and add your specific test settings</p>
+</li>
+</ol>
+</div>
+<div class="section" id="running-python-tests">
+<h2>Running Python Tests<a class="headerlink" href="#running-python-tests" title="Permalink to this headline">¶</a></h2>
+<p>In order to run python tests, you have to start solr server and run this command:</p>
+<blockquote>
+<div><em>$ nosetests</em></div></blockquote>
+</div>
+<div class="section" id="running-jasmine-specs">
+<h2>Running Jasmine Specs<a class="headerlink" href="#running-jasmine-specs" title="Permalink to this headline">¶</a></h2>
+<p>If you want to run the tests for the javascript library you have to start the websocket server:</p>
+<blockquote>
+<div><em>$ python bin/wss &lt;path_to_ckan_config&gt; &#8211;test</em></div></blockquote>
+<p>start the jasmine runner:</p>
+<blockquote>
+<div><em>$ rake jasmine</em></div></blockquote>
+<p>and run the tests in  your browser by navigating to <em>localhost:8888</em> in your browser. Alternatively, execute the tests directly in your shell:</p>
+<blockquote>
+<div><em>$ rake jasmine:ci</em></div></blockquote>
+</div>
 <div class="section" id="copying-and-license">
 <h2>Copying and License<a class="headerlink" href="#copying-and-license" title="Permalink to this headline">¶</a></h2>
 <p>This material is copyright (c) 2014 Alexandra Instituttet A/S.</p>
@@ -64,35 +131,22 @@ whose full text may be found at:</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">ckanext-realtime</a><ul>
-<li><a class="reference internal" href="#copying-and-license">Copying and License</a></li>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to ckanext-realtime&#8217;s documentation!</a></p>
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">ckanext-realtime</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#utilities-included">Utilities included</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#environment">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-python-tests">Running Python Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-jasmine-specs">Running Jasmine Specs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#copying-and-license">Copying and License</a></li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to ckanext-realtime&#8217;s documentation!</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/includeme.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -111,7 +165,7 @@ whose full text may be found at:</p>
     </div>
     <div class="footer">
         &copy; Copyright 2014, Alexandra Institute.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>
