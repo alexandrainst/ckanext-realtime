@@ -45,6 +45,10 @@ paster datastore set-permissions postgres -c "$PROJECT_DIR"/links/test-core.ini
 # install jasmine
 gem install jasmine
 
+# install dependencies
+cd "$PROJECT_DIR"
+pip install -r requirements.txt
+
 # start WebSocket server in test mode
 cd "$PROJECT_DIR"/bin
 python wss "$PROJECT_DIR"/links/development.ini --test &
