@@ -4,7 +4,7 @@ import ckanext.realtime.event.base as base
 class DatastoreCreateEvent(base.package_event, base.resource_event):
     '''Fired when a new datastore is created
     
-    TODO: implement
+    TODO: emiting not implemented
     
     '''
     channel_name = 'datastore_create'
@@ -38,13 +38,13 @@ class DatastoreDeleteEvent(base.resource_event):
         base.resource_event.__init__(self, resource_id)
 
 
-class DatastoreSchemaAlteredEvent(base.resource_event):
+class DatastoreSchemaAlterEvent(base.resource_event):
     '''Fired when the structure of some datastore is changed
     
-    TODO: implement
+    TODO: emiting not implemented
     
     '''
-    channel_name = 'datastore_schema_altered'
+    channel_name = 'datastore_schema_alter'
     
     def __init__(self, resource_id):
         base.resource_event.__init__(self, resource_id)

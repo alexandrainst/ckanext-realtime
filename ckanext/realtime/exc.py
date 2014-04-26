@@ -1,2 +1,0 @@
-class RealtimeError(Exception):
-    pass

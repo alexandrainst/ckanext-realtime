@@ -25,22 +25,25 @@ class RealtimePlugin(plugins.SingletonPlugin):
         self.config = config
         
         # from datastore settings
-        self.read_url = self.config['ckan.datastore.read_url']
-        self.write_url = self.config['ckan.datastore.write_url']
+        db.READ_URL = self.config['ckan.datastore.read_url']
+        db.WRITE_URL = self.config['ckan.datastore.write_url']
         
-        db.SessionFactory.configure(self.read_url, self.write_url)
         evt.EventDispatcher.configure('127.0.0.1', 6379)
         
-        db.create_datastore_notifier_trigger_function(self.write_url)
+        db.create_datastore_notifier_trigger_function()
 
     def get_actions(self):
         return {'realtime_broadcast_events': action.realtime_broadcast_events,
-                'datastore_make_observable': action.datastore_make_observable
+                'datastore_make_observable': action.datastore_make_observable,
+                'realtime_check_apikey': action.realtime_check_apikey,
+                'realtime_check_observable_datastore': action.realtime_check_observable_datastore,
                 }
         
     def get_auth_functions(self):
         return {'realtime_broadcast_events': auth.realtime_broadcast_events,
-                'datastore_make_observable': auth.datastore_make_observable
+                'datastore_make_observable': auth.datastore_make_observable,
+                'realtime_check_apikey': auth.realtime_check_apikey,
+                'realtime_check_observable_datastore': auth.realtime_check_observable_datastore,
                 }
 
 #     def notify(self, entity, operation):

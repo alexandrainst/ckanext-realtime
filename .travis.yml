@@ -6,10 +6,9 @@ services:
 env:
   - PGVERSION=9.1
 install:
-  - pip install -r requirements.txt
   - pip install coveralls
 before_install: bash bin/travis-before-install.sh
 script: 
-  - nosetests --with-pylons=links/test-core.ini
   - nosetests  --with-coverage --cover-package=ckanext.realtime --with-pylons=links/test-core.ini
+  - rake jasmine:ci
 after_success:  coveralls
