@@ -55,7 +55,7 @@ CkanRT.prototype.datastoreMakeObservable = function(resourceId) {
 CkanRT.prototype.authenticate = function(apiKey) {
 	var packet = {
 		type : 'auth',
-		apikey : apiKey
+		apikey_to_check : apiKey
 	};
 	this.websocket.send(JSON.stringify(packet));
 };

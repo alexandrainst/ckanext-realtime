@@ -1,14 +1,13 @@
 import paste.fixture
 import pylons.test
 import pylons.config as config
+import sqlalchemy
 import sqlalchemy.orm as orm
 
 import ckan.model as model
 import ckan.plugins as p
 import ckan.lib.create_test_data as ctd
 from ckanext.datastore.tests.helpers import rebuild_all_dbs, set_url_type
-
-import ckanext.realtime.db as db
 
 import ckan.tests as tests
 
@@ -27,7 +26,7 @@ class TestRealtimeActions(object):
         cls.app = paste.fixture.TestApp(pylons.test.pylonsapp)
 
         
-        engine = db.get_engine(config['ckan.datastore.write_url'])
+        engine = sqlalchemy.create_engine(config['ckan.datastore.write_url'])
         cls.Session = orm.scoped_session(orm.sessionmaker(bind=engine))
         
         rebuild_all_dbs(cls.Session)
@@ -116,10 +115,33 @@ class TestRealtimeActions(object):
                               event_type='datastore_update',
                               status=403)
         
-    def test_broadcast_events_by_admin_bad_request(self):
-        resource = model.Package.get('annakarenina').resources[0]
- 
+    def test_broadcast_events_by_admin_bad_request(self): 
         tests.call_action_api(self.app, 'realtime_broadcast_events',
                               event_type='datastore_update',
                               apikey=self.sysadmin_user.apikey,
                               status=409)
+        
+    def test_check_apikey_by_admin(self):
+        res = tests.call_action_api(self.app, 'realtime_check_apikey',
+                                    apikey_to_check=self.normal_user.apikey,
+                                    apikey=self.sysadmin_user.apikey)
+        
+        assert res['auth']
+    
+    def test_check_invalid_apikey_by_admin(self):
+        res = tests.call_action_api(self.app, 'realtime_check_apikey',
+                                    apikey_to_check='invalidkey',
+                                    apikey=self.sysadmin_user.apikey)
+        
+        assert not res['auth']
+    
+    def test_check_apikey_by_normal_user(self):
+        tests.call_action_api(self.app, 'realtime_check_apikey',
+                                    apikey_to_check=self.sysadmin_user.apikey,
+                                    apikey=self.normal_user.apikey,
+                                    status=409)
+    
+    def test_check_apikey_without_apikey(self):
+        tests.call_action_api(self.app, 'realtime_check_apikey',
+                                    apikey_to_check=self.sysadmin_user.apikey,
+                                    status=403)

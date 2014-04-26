@@ -42,7 +42,7 @@ class ClientMessageHandler(client_message_handler_base):
     
     '''
     def _authenticate(self, request):
-        if self._check_apikey(request['apikey']):
+        if self._check_apikey(request['apikey_to_check']):
             return {'type': 'auth', 'result': True}
         else:
             return {'type': 'auth', 'result': False}
@@ -75,7 +75,7 @@ class TestClientMessageHandler(client_message_handler_base):
     '''Mock API of ClientMessageHandler for testing purposes'''
     
     def _authenticate(self, request):
-        if request['apikey'] == 'correctKey':
+        if request['apikey_to_check'] == 'correctKey':
             return {'type': 'auth', 'result': True}
         else:
             return {'type': 'auth', 'result': False}

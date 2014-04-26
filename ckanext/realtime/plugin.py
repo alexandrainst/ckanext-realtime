@@ -25,13 +25,12 @@ class RealtimePlugin(plugins.SingletonPlugin):
         self.config = config
         
         # from datastore settings
-        self.read_url = self.config['ckan.datastore.read_url']
-        self.write_url = self.config['ckan.datastore.write_url']
+        db.READ_URL = self.config['ckan.datastore.read_url']
+        db.WRITE_URL = self.config['ckan.datastore.write_url']
         
-        db.SessionFactory.configure(self.read_url, self.write_url)
         evt.EventDispatcher.configure('127.0.0.1', 6379)
         
-        db.create_datastore_notifier_trigger_function(self.write_url)
+        db.create_datastore_notifier_trigger_function()
 
     def get_actions(self):
         return {'realtime_broadcast_events': action.realtime_broadcast_events,

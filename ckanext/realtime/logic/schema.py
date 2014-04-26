@@ -28,6 +28,6 @@ def datastore_make_observable_schema():
 
 def realtime_check_apikey_schema():
     schema = {
-              'apikey': [_not_empty, unicode],
+              'apikey_to_check': [_not_empty, unicode],
               }
     return schema
