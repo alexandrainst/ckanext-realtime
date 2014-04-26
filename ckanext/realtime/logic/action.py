@@ -5,10 +5,13 @@ ckanext-datastore.
 
 '''
 import logging
+import pylons
+import sqlalchemy
 
 import ckan.lib.navl.dictization_functions
 import ckan.plugins as p
 import ckan.model as model
+import ckanext.realtime as rt
 import ckanext.realtime.db as db
 from ckanext.realtime.event.event_dispatcher import EventDispatcher
 from ckanext.realtime.event.event_factory import EventFactory
@@ -66,6 +69,15 @@ def datastore_make_observable(context, data_dict):
     
     
 def realtime_check_apikey(context, data_dict):
+    '''Check whether a particular apikey exists.
+    
+    :param apikey_to_check: target apikey
+    :type api_key_to_check: string
+    
+    :return: whether the apikey exists
+    :rtype: dictionary
+    
+    '''
     schema = context.get('schema',
                          realtime_schema.realtime_check_apikey_schema())
     
@@ -80,7 +92,46 @@ def realtime_check_apikey(context, data_dict):
     log.info('Checking api key: ' + data_dict['apikey_to_check'])
     log.info(user)
     if user:
-        return {'auth': True}
+        return {'exists': True}
     else:
-        return {'auth': False}
+        return {'exists': False}
+    
+    
+def realtime_check_observable_datastore(context, data_dict):
+    '''Check whether a particular datastore is observable
+    
+    :param resource_id: target resource
+    :type resource_id: string
+    
+    :return: indication whether the resource is an observable datastore, 
+        non-observable datastore or not a datastore
+    :rtype: dictionary
+        
+    '''
+    schema = context.get('schema', realtime_schema.realtime_check_observable_datastore_schema())
+    data_dict, errors = _validate(data_dict, schema, context)
+    if errors:
+        raise p.toolkit.ValidationError(errors)
+    
+    p.toolkit.check_access('realtime_check_observable_datastore', context, data_dict)
+    
+    if not _datastore_exists(data_dict):
+        return {'is_observable': rt.NON_DATASTORE_MESSAGE}
+    elif db.notifier_trigger_function_exists(data_dict['resource_id']):
+        return {'is_observable': rt.YES_MESSAGE}
+    else:
+        return {'is_observable': rt.NO_MESSAGE}
+
+
+def _datastore_exists(data_dict):
+    connection_url = pylons.config['ckan.datastore.write_url']
+
+    res_id = data_dict['resource_id']
+    resources_sql = sqlalchemy.text(u'''SELECT 1 FROM "_table_metadata"
+                                        WHERE name = :id AND alias_of IS NULL''')
+    
+    engine = sqlalchemy.create_engine(connection_url)
+    
+    results = engine.execute(resources_sql, id=res_id)
+    return results.rowcount > 0
 

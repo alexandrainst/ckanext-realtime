@@ -1,12 +1,9 @@
 import logging
+import pylons
 
 import sqlalchemy
 
 log = logging.getLogger(__name__)
-
-# should set in plugin.py
-WRITE_URL = ''
-READ_URL = ''
     
     
 def add_datastore_notifier_trigger(resource_id):
@@ -19,7 +16,7 @@ def add_datastore_notifier_trigger(resource_id):
         EXECUTE PROCEDURE datastore_notifier();
     '''.format(res=resource_id)
     
-    engine = sqlalchemy.create_engine(WRITE_URL)
+    engine = sqlalchemy.create_engine(pylons.config['ckan.datastore.write_url'])
     engine.execute(sql)
 
 
@@ -42,5 +39,13 @@ def create_datastore_notifier_trigger_function():
         SECURITY DEFINER;
     """
     
-    engine = sqlalchemy.create_engine(WRITE_URL)
+    engine = sqlalchemy.create_engine(pylons.config['ckan.datastore.write_url'])
     engine.execute(sql)
+    
+    
+def notifier_trigger_function_exists(resource_id):
+    sql = sqlalchemy.text('SELECT * FROM pg_trigger WHERE tgname = :tg;')
+    
+    engine = sqlalchemy.create_engine(pylons.config['ckan.datastore.write_url'])
+    results = engine.execute(sql, tg='{}_notifier'.format(resource_id))
+    return results.rowcount == 1

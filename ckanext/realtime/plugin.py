@@ -36,12 +36,14 @@ class RealtimePlugin(plugins.SingletonPlugin):
         return {'realtime_broadcast_events': action.realtime_broadcast_events,
                 'datastore_make_observable': action.datastore_make_observable,
                 'realtime_check_apikey': action.realtime_check_apikey,
+                'realtime_check_observable_datastore': action.realtime_check_observable_datastore,
                 }
         
     def get_auth_functions(self):
         return {'realtime_broadcast_events': auth.realtime_broadcast_events,
                 'datastore_make_observable': auth.datastore_make_observable,
                 'realtime_check_apikey': auth.realtime_check_apikey,
+                'realtime_check_observable_datastore': auth.realtime_check_observable_datastore,
                 }
 
 #     def notify(self, entity, operation):
