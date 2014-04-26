@@ -24,8 +24,13 @@ REDIS_PORT = 6379
 WSS_URL = 'ws://127.0.0.1:9000'
 
 def main(config, test):
-    apikey = config.get('app:main', 'ckan.realtime.apikey')
-    ckan_api_url = config.get('app:main', 'ckan.realtime.ckan_api_url')
+    if not test:
+        apikey = config.get('app:main', 'ckan.realtime.apikey')
+        ckan_api_url = config.get('app:main', 'ckan.realtime.ckan_api_url')
+    else: 
+        #no need to connect to the real api if running in the test mode
+        apikey = 'foo'
+        ckan_api_url = 'foobar'
     
     events_for_subscribing = [de.DatastoreInsertEvent,
                               de.DatastoreDeleteEvent,
