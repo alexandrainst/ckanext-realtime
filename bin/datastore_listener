@@ -10,10 +10,8 @@ import json
 import psycopg2.extensions
 import requests
 import select
+import sqlalchemy
 import urlparse
-
-
-import ckanext.realtime.db as db
 
 def call_ckan_api(notify, ckan_api_url, apikey):
     '''Parses NOTIFY packages and forwards the info to ckan api.
@@ -58,7 +56,7 @@ def call_ckan_api(notify, ckan_api_url, apikey):
 
 
 def make_connection(sqlalchemy_url):
-    engine = db.get_engine(sqlalchemy_url)
+    engine = sqlalchemy.create_engine(sqlalchemy_url)
     base_conn = engine.connect()
     sub_conn = base_conn.connection
     psycopg_conn = sub_conn.connection

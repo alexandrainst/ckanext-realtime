@@ -19,6 +19,7 @@ import ckanext.realtime.twisted.websocket as ws
 import ckanext.realtime.twisted.redis as rd
 
 
+# TODO: should move this to the config file
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
 WSS_URL = 'ws://127.0.0.1:9000'

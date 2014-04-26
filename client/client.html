@@ -32,7 +32,7 @@
 
 	function onOpen(evt) {
 		writeToScreen("CONNECTED");
-		doSend("WebSocket rocks");
+		rt.authenticate("<apikey>");
 	}
 
 	function onClose(evt) {

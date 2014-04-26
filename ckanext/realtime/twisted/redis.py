@@ -62,5 +62,4 @@ class CKANEventProcessorProtocol(RedisSubscriber):
     def messageReceived(self, channel, message):
         '''Pass the received CKAN events to WSS to be sent to WSCs'''
         if isinstance(message, basestring):
-#             obj = jsonpickle.decode(message)
-            self.websocket_factory.broadcast(message)
+            self.websocket_factory.handle_from_redis(message)
