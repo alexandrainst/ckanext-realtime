@@ -44,14 +44,6 @@ CkanRT.prototype.datastoreUnsubscribe = function(resourceId) {
 	this.websocket.send(JSON.stringify(packet));
 };
 
-CkanRT.prototype.isDatastoreObservable = function(resourceId) {
-	//TODO: implement
-};
-
-CkanRT.prototype.datastoreMakeObservable = function(resourceId) {
-	//TODO: implement
-};
-
 CkanRT.prototype.authenticate = function(apiKey) {
 	var packet = {
 		type : 'auth',
@@ -83,8 +75,3 @@ function messageReceived(message, rt) {
 			console.log('unrecognized payload');
 	}
 }
-
-// CkanRT.prototype.emitControlEvent = function(event) {
-//
-// };
-
