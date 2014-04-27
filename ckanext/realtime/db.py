@@ -7,6 +7,8 @@ log = logging.getLogger(__name__)
     
     
 def add_datastore_notifier_trigger(resource_id):
+    '''This trigger sends datastore events to bin/datastore_listener script'''
+    
     sql = '''
         DROP TRIGGER IF EXISTS "{res}_notifier" ON "{res}" RESTRICT;
     
@@ -21,13 +23,7 @@ def add_datastore_notifier_trigger(resource_id):
 
 
 def create_datastore_notifier_trigger_function():
-    '''Create a function for datastore tables used to notify about changes.
-    
-    :param write_url: sqlalchemy url with write access to datastore database.
-    :type write_url: string
-    
-    '''
-    global write_url
+    '''Create a function for datastore tables used to notify about changes.'''
     
     sql = """
         CREATE OR REPLACE FUNCTION "public"."datastore_notifier" () RETURNS trigger AS 'BEGIN

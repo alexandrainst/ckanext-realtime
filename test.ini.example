@@ -8,3 +8,8 @@ sqlalchemy.url =
 
 ckan.datastore.write_url =  
 ckan.datastore.read_url = 
+
+ckan.realtime.ckan_api_url = http://localhost:5000/api/3/action/
+ckan.realtime.apikey = <API_KEY> 
+ckan.realtime.redis_host = 127.0.0.1
+ckan.realtime.redis_port = 6379

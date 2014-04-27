@@ -10,12 +10,12 @@ class TestEventFactory(tests.CheckMethods):
     def test_bad_input(self):
         data_dict = {'afgh': 1}
         self.assert_raises(ckan.logic.ValidationError,
-                           EventFactory.build_events,
+                           EventFactory.build_event,
                            data_dict)
         
         data_dict = {'event_type': 'foobar', 'resource_id': str(uuid.uuid4())}
         self.assert_raises(ckan.logic.ValidationError,
-                           EventFactory.build_events,
+                           EventFactory.build_event,
                            data_dict)
     
     def test_datastore_create(self):
@@ -23,32 +23,32 @@ class TestEventFactory(tests.CheckMethods):
                      'resource_id': str(uuid.uuid4()),
                      'package_id': str(uuid.uuid4())}
         
-        events = EventFactory.build_events(data_dict)
+        event = EventFactory.build_event(data_dict)
         
-        self.assert_true(isinstance(events[0], evt.DatastoreCreateEvent))
+        self.assert_true(isinstance(event, evt.DatastoreCreateEvent))
         
     def test_datastore_schema_alter(self):
         data_dict = {'event_type': 'datastore_schema_alter',
                      'resource_id': str(uuid.uuid4())}
         
-        events = EventFactory.build_events(data_dict)
+        event = EventFactory.build_event(data_dict)
         
-        self.assert_true(isinstance(events[0], evt.DatastoreSchemaAlterEvent))
+        self.assert_true(isinstance(event, evt.DatastoreSchemaAlterEvent))
         
     def test_datastore_insert(self):
         data_dict = {'event_type': 'datastore_insert', 'resource_id': str(uuid.uuid4())}
         
-        events = EventFactory.build_events(data_dict)
-        self.assert_true(isinstance(events[0], evt.DatastoreInsertEvent))
+        event = EventFactory.build_event(data_dict)
+        self.assert_true(isinstance(event, evt.DatastoreInsertEvent))
     
     def test_datastore_update_event(self):
         data_dict = {'event_type': 'datastore_update', 'resource_id': str(uuid.uuid4())}
         
-        events = EventFactory.build_events(data_dict)
-        self.assert_true(isinstance(events[0], evt.DatastoreUpdateEvent))
+        event = EventFactory.build_event(data_dict)
+        self.assert_true(isinstance(event, evt.DatastoreUpdateEvent))
     
     def test_datastore_delete_event(self):
         data_dict = {'event_type': 'datastore_delete', 'resource_id': str(uuid.uuid4())}
         
-        events = EventFactory.build_events(data_dict)
-        self.assert_true(isinstance(events[0], evt.DatastoreDeleteEvent))
+        event = EventFactory.build_event(data_dict)
+        self.assert_true(isinstance(event, evt.DatastoreDeleteEvent))

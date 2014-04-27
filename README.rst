@@ -1,14 +1,15 @@
-ckanext-realtime
-================
-
 .. image:: https://travis-ci.org/alexandrainst/ckanext-realtime.png?branch=master
 	:target: https://travis-ci.org/alexandrainst/ckanext-realtime
 .. image:: https://coveralls.io/repos/alexandrainst/ckanext-realtime/badge.png
 	:target: https://coveralls.io/r/alexandrainst/ckanext-realtime
+	
+ckanext-realtime
+================
 
-*ckanext-realtime* is CKAN extension which enables CKAN to serve realtime data.
+**ckanext-realtime** is CKAN plugin which makes your CKAN site into a **Realtime Data Portal**. By using **CkanRT.js** library, client applications
+can subscribe to realtime events from *Observable Datastores*.
 
-**This extension is currently in the initial development stages. Please submit your ideas and PRs if you would like to contribute.**
+For more info read the `docs <http://alexandrainst.github.io/ckanext-realtime/>`_ . Feel free to submit your ideas and PRs if you would like to contribute.
 
 Copying and License
 -------------------
@@ -28,7 +29,7 @@ Utilities included
 ------------------
 #. CKAN extension which enables observable datastores
 #. Datastore listener script (bin/datastore_listener)
-#. WebSocket server (bin/wss)
+#. WebSocket server (bin/ckan_wss)
 #. JavaScript library for communication with the realtime CKAN (client/CkanRT.js)
 
 Environment
@@ -74,7 +75,7 @@ Running Jasmine Specs
 ---------------------
 If you want to run the tests for the javascript library you have to start the websocket server:
 	
-	*$ python bin/wss <path_to_ckan_config> --test*
+	*$ python bin/ckan_wss <path_to_ckan_config> --test*
 
 start the jasmine runner:
 

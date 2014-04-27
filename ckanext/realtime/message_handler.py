@@ -8,12 +8,17 @@ from twisted.python import log
 import ckanext.realtime as rt
 
 class message_handler_base(object):
+    '''This class contains the logic for handling messages from WebSocket clients
+        and Redis subscriber. You should use 1 of it's derived classes:
+        MessageHandler or TestMessageHandler.
+        
+    '''
+    # TODO: reduce the number of state variables
 
     def __init__(self, api_url, apikey):
         self.api_url = api_url
         self.wss_api_key = apikey
-        self.websocket_clients = []
-        self.apikey_to_client = {}
+        self.apikey_to_client = {} #track authenticated clients
         self.resource_to_clients = {}
         
     def register_websocket_client(self, client):
@@ -24,9 +29,7 @@ class message_handler_base(object):
         :type client: ckanext.realtime.twisted.websocket.CkanWebSocketServerProtocol
         
         '''
-        if not client in self.websocket_clients:
-            self.websocket_clients.append(client)
-            log.msg("registered client {}".format(client.peer))
+        log.msg("register client {}".format(client.peer))
     
     def unregister_websocket_client(self, client):
         ''' Unregister WebSocket client
@@ -35,9 +38,7 @@ class message_handler_base(object):
         :type client: ckanext.realtime.twisted.websocket.CkanWebSocketServerProtocol
         
         '''
-        if client in self.websocket_clients:
-            self.websocket_clients.remove(client)
-            log.msg("unregistered client {}".format(client.peer))
+        log.msg("unregister client {}".format(client.peer))
         for apikey, cl in self.apikey_to_client.iteritems():
             if cl == client:
                 self.apikey_to_client.pop(apikey)
@@ -54,7 +55,7 @@ class message_handler_base(object):
             or TestMessageHandler.
          
         :param json_msg: json string containing request body that came from client.
-        :type json_msg: basestring           
+        :type json_msg: basestring
         :param client: WebSocket client
         :type client: ckanext.realtime.twisted.websocket.CkanWebSocketServerProtocol
         

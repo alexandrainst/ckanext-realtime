@@ -13,6 +13,10 @@ class EventDispatcher(object):
         cls.r = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
     
     @classmethod
+    def dispatch_one(cls, event):
+        cls.r.publish(event.channel_name, jsonpickle.encode(event))
+            
+    @classmethod
     def dispatch(cls, events):
         for e in events:
-            cls.r.publish(e.channel_name, jsonpickle.encode(e))
+            cls.dispatch_one(e)

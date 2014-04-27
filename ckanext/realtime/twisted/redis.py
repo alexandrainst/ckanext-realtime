@@ -1,5 +1,3 @@
-import jsonpickle
-
 from twisted.internet import reactor, protocol
 from twisted.python import log
 
@@ -61,5 +59,6 @@ class CKANEventProcessorProtocol(RedisSubscriber):
         
     def messageReceived(self, channel, message):
         '''Pass the received CKAN events to WSS to be sent to WSCs'''
+        
         if isinstance(message, basestring):
             self.websocket_factory.handle_from_redis(message)

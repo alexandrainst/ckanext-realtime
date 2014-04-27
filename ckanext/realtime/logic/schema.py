@@ -9,7 +9,7 @@ _package_id_exists = _get_validator('package_id_exists')
 _ignore_missing = _get_validator('ignore_missing')
 
 
-def realtime_broadcast_events_schema():
+def realtime_broadcast_event_schema():
     schema = {
               'event_type': [_not_empty, unicode],
               'package_id': [_ignore_missing, unicode, _package_id_exists],

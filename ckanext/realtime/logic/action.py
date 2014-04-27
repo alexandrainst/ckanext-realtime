@@ -21,7 +21,7 @@ log = logging.getLogger(__name__)
 _validate = ckan.lib.navl.dictization_functions.validate
 
 
-def realtime_broadcast_events(context, data_dict):
+def realtime_broadcast_event(context, data_dict):
     '''Broadcast events to registered listeners.
     
     :param event_type: the type of the event
@@ -34,7 +34,7 @@ def realtime_broadcast_events(context, data_dict):
     
     '''
     schema = context.get('schema',
-                         realtime_schema.realtime_broadcast_events_schema())
+                         realtime_schema.realtime_broadcast_event_schema())
     
     data_dict, errors = _validate(data_dict, schema, context)
     if errors:
@@ -43,10 +43,10 @@ def realtime_broadcast_events(context, data_dict):
     if not 'resource_id' in data_dict and not 'package_id' in data_dict:
         raise p.toolkit.ValidationError('Either resource_id or package_id or both, have to be set')
     
-    p.toolkit.check_access('realtime_broadcast_events', context, data_dict)
+    p.toolkit.check_access('realtime_broadcast_event', context, data_dict)
     
-    events = EventFactory.build_events(data_dict)
-    EventDispatcher.dispatch(events)
+    event = EventFactory.build_event(data_dict)
+    EventDispatcher.dispatch_one(event)
 
 
 def datastore_make_observable(context, data_dict):

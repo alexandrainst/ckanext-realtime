@@ -1,7 +1,7 @@
 import autobahn.twisted.websocket as ws
 from twisted.python import log
 
-import ckanext.realtime.message_handler as ch 
+import ckanext.realtime.message_handler as ch
 
 class CkanWebSocketServerFactory(ws.WebSocketServerFactory):
     '''Twisted server factory for CKAN WebSocket protocols'''
@@ -28,12 +28,6 @@ class CkanWebSocketServerFactory(ws.WebSocketServerFactory):
     def unregister(self, client):
         self.message_handler.unregister_websocket_client(client)
     
-#     def broadcast(self, msg):
-#         log.msg("broadcasting message '{}' ..".format(msg))
-#         for c in self.clients:
-#             c.sendMessage(msg.encode('utf8'))
-#             log.msg("message sent to {}".format(c.peer))
-            
     def handle_from_redis(self, msg):
         self.message_handler.handle_message_from_redis(msg)
     
@@ -50,10 +44,7 @@ class CkanWebSocketServerProtocol(ws.WebSocketServerProtocol):
         if binary:
             return
         log.msg('request: ' + msg)
-        
         self.factory.handle_from_client(msg, self)
-#         log.msg(result)
-
     
     def connectionLost(self, reason):
         ws.WebSocketServerProtocol.connectionLost(self, reason)
