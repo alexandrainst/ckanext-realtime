@@ -10,6 +10,20 @@ ckanext-realtime
 
 **This extension is currently in the initial development stages. Please submit your ideas and PRs if you would like to contribute.**
 
+Copying and License
+-------------------
+
+This material is copyright (c) 2014 Alexandra Instituttet A/S.
+
+It is open and licensed under the GNU Affero General Public License (AGPL) v3.0
+whose full text may be found at:
+
+http://www.fsf.org/licensing/licenses/agpl-3.0.html
+
+
+Quick Start Guide
+=================
+
 Utilities included
 ------------------
 #. CKAN extension which enables observable datastores
@@ -69,14 +83,3 @@ start the jasmine runner:
 and run the tests in  your browser by navigating to *localhost:8888* in your browser. Alternatively, execute the tests directly in your shell:
 
 	*$ rake jasmine:ci*
-
-
-Copying and License
--------------------
-
-This material is copyright (c) 2014 Alexandra Instituttet A/S.
-
-It is open and licensed under the GNU Affero General Public License (AGPL) v3.0
-whose full text may be found at:
-
-http://www.fsf.org/licensing/licenses/agpl-3.0.html
