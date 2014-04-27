@@ -27,7 +27,8 @@ def main(config, test):
         
         redis_port = config.get('app:main', 'ckan.realtime.redis_port')
         
-        wss_url = 'ws://127.0.0.1:9000'
+        wss_port = config.get('app:main', 'ckan.realtime.wss_port')
+        wss_url = 'ws://127.0.0.1:{}'.format(wss_port)
     else: 
         #no need to connect to the real api if running in the test mode
         apikey = 'foo'
