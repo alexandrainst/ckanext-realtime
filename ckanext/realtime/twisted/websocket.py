@@ -1,7 +1,7 @@
 import autobahn.twisted.websocket as ws
 from twisted.python import log
 
-import ckanext.realtime.message_handler as ch
+import ckanext.realtime.message_handler as mh
 
 class CkanWebSocketServerFactory(ws.WebSocketServerFactory):
     '''Twisted server factory for CKAN WebSocket protocols'''
@@ -14,9 +14,9 @@ class CkanWebSocketServerFactory(ws.WebSocketServerFactory):
         
         if test:
             # most of the responses in the TestClientMessageHandler are mocked
-            self.message_handler = ch.TestMessageHandler(api_url, apikey)
+            self.message_handler = mh.TestMessageHandler(api_url, apikey)
         else:
-            self.message_handler = ch.MessageHandler(api_url, apikey)
+            self.message_handler = mh.MessageHandler(api_url, apikey)
     
     def listen(self):
         '''Listen for incoming WebSocket connections'''
