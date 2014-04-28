@@ -14,7 +14,7 @@ class EventDispatcher(object):
     
     @classmethod
     def dispatch_one(cls, event):
-        cls.r.publish(event.channel_name, jsonpickle.encode(event))
+        cls.r.publish(event.event_name, jsonpickle.encode(event))
             
     @classmethod
     def dispatch(cls, events):

@@ -53,7 +53,7 @@ class CKANEventProcessorProtocol(RedisSubscriber):
         :type event_classes: list
         
         '''
-        channels = [ec.channel_name for ec in event_classes]
+        channels = [ec.event_name for ec in event_classes]
         RedisSubscriber.subscribe(self, *channels)
         log.msg('subscribed to {} new channels'.format(len(channels)))
         

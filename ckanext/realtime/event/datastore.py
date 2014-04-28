@@ -7,7 +7,7 @@ class DatastoreCreateEvent(base.package_event, base.resource_event):
     TODO: emiting not implemented
     
     '''
-    channel_name = 'datastore_create'
+    event_name = 'datastore_create'
     
     def __init__(self, package_id, resource_id):
         base.package_event.__init__(self, package_id)
@@ -16,7 +16,7 @@ class DatastoreCreateEvent(base.package_event, base.resource_event):
 
 class DatastoreInsertEvent(base.resource_event):
     '''Fired for each new tuple inserted in a particular observable datastore'''
-    channel_name = 'datastore_insert'
+    event_name = 'datastore_insert'
     
     def __init__(self, resource_id):
         base.resource_event.__init__(self, resource_id)
@@ -24,7 +24,7 @@ class DatastoreInsertEvent(base.resource_event):
 
 class DatastoreUpdateEvent(base.resource_event):
     '''Fired for each updated tuple in a particular observable datastore'''
-    channel_name = 'datastore_update'
+    event_name = 'datastore_update'
     
     def __init__(self, resource_id):
         base.resource_event.__init__(self, resource_id)
@@ -32,7 +32,7 @@ class DatastoreUpdateEvent(base.resource_event):
 
 class DatastoreDeleteEvent(base.resource_event):
     '''Fired for each deleted tuple in a particular observable datastore'''
-    channel_name = 'datastore_delete'
+    event_name = 'datastore_delete'
     
     def __init__(self, resource_id):
         base.resource_event.__init__(self, resource_id)
@@ -44,7 +44,7 @@ class DatastoreSchemaAlterEvent(base.resource_event):
     TODO: emiting not implemented
     
     '''
-    channel_name = 'datastore_schema_alter'
+    event_name = 'datastore_schema_alter'
     
     def __init__(self, resource_id):
         base.resource_event.__init__(self, resource_id)
