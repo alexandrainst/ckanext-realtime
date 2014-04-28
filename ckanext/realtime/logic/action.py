@@ -1,9 +1,5 @@
-'''This module contains ckan API actions specific to ckanext-realtime. 
+'''This module contains ckan API actions specific to ckanext-realtime.'''
 
-The docstrings in this module are, for the most part, copied from
-ckanext-datastore.
-
-'''
 import logging
 import pylons
 import sqlalchemy
@@ -22,7 +18,7 @@ _validate = ckan.lib.navl.dictization_functions.validate
 
 
 def realtime_broadcast_event(context, data_dict):
-    '''Broadcast events to registered listeners.
+    '''Broadcast event to registered listeners.
     
     :param event_type: the type of the event
     :type event_type: string
