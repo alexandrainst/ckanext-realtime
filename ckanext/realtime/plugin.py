@@ -1,5 +1,3 @@
-import logging
-
 import ckanext.realtime.db as db
 import ckanext.realtime.event.event_dispatcher as evt
 import ckanext.realtime.logic.action as action
@@ -7,13 +5,11 @@ import ckanext.realtime.logic.auth as auth
 
 import ckan.plugins as plugins
 
-log = logging.getLogger(__name__)
-
 class RealtimePlugin(plugins.SingletonPlugin):
-    ''' CKAN Plugin enabling Observable Datastore and thus realtime datastore 
-            observation.
+    '''CKAN Plugin which enables **Observable Datastores** and publishing 
+        datastore events.
         
-        This plugin builds upon ckanext-datastore.
+        Enabling ckanext-datastore plugin is a requirement.
     '''
     plugins.implements(plugins.IConfigurable, inherit=True)
     plugins.implements(plugins.IActions)
@@ -22,25 +18,21 @@ class RealtimePlugin(plugins.SingletonPlugin):
     
     def configure(self, config):
         ''' Configure the plugin - inherited from IConfigurable '''
-        self.config = config
         
-        # from datastore settings
-        db.READ_URL = self.config['ckan.datastore.read_url']
-        db.WRITE_URL = self.config['ckan.datastore.write_url']
-        
-        evt.EventDispatcher.configure('127.0.0.1', 6379)
+        evt.EventDispatcher.configure(config['ckan.realtime.redis_host'],
+                                      config['ckan.realtime.redis_port'])
         
         db.create_datastore_notifier_trigger_function()
 
     def get_actions(self):
-        return {'realtime_broadcast_events': action.realtime_broadcast_events,
+        return {'realtime_broadcast_event': action.realtime_broadcast_event,
                 'datastore_make_observable': action.datastore_make_observable,
                 'realtime_check_apikey': action.realtime_check_apikey,
                 'realtime_check_observable_datastore': action.realtime_check_observable_datastore,
                 }
         
     def get_auth_functions(self):
-        return {'realtime_broadcast_events': auth.realtime_broadcast_events,
+        return {'realtime_broadcast_event': auth.realtime_broadcast_event,
                 'datastore_make_observable': auth.datastore_make_observable,
                 'realtime_check_apikey': auth.realtime_check_apikey,
                 'realtime_check_observable_datastore': auth.realtime_check_observable_datastore,

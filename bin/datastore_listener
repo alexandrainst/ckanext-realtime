@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 '''
 Listen for events from datastore tables using PostgreSQL LISTEN/NOTIFY.
@@ -24,7 +24,7 @@ def call_ckan_api(notify, ckan_api_url, apikey):
         'realtime_broadcast_events' action
         
     '''
-    url = urlparse.urljoin(ckan_api_url, 'realtime_broadcast_events')
+    url = urlparse.urljoin(ckan_api_url, 'realtime_broadcast_event')
     auth_header = {'Authorization': apikey,
                    'content-type': 'application/json'}
     

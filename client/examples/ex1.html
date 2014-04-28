@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<meta charset="utf-8" />
+
+<title>ckanext-realtime Example 1</title>
+
+<script src="jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="../CkanRT.js"></script>
+
+<script language="javascript" type="text/javascript">
+	var output;
+	var rt;
+
+	function init() {
+		output = document.getElementById("output");
+		var wsUri = jQuery("#wss").val();
+		initializeConnection(wsUri);
+	}
+
+	function initializeConnection(wsUri) {
+
+		rt = new CkanRT(wsUri);
+		
+		// define CkanRT callbacks
+		rt.onAuth = function() {
+			writeToScreen('<span style="color: blue;">RESPONSE: authenticated</span>');
+		};
+
+		rt.onDatastoreSubscribeResult = function(resourceId, status) {
+			writeToScreen('<span style="color: blue;">Subscribe to ' + resourceId + '. Status: ' + status + '</span>');
+		};
+
+		rt.onDatastoreUnsubscribeResult = function(resourceId, status) {
+			writeToScreen('<span style="color: blue;">Unsubscribe from ' + resourceId + '. Status: ' + status + '</span>');
+		};
+
+		rt.onDatastoreEvent = function(event) {
+			writeToScreen('<span style="color: blue;">New event ' + JSON.stringify(event) + '</span>');
+		};
+		
+		//end of CkanRT specific callbacks
+
+		//some WebSocket callbacks
+		rt.websocket.onopen = function(evt) {
+			writeToScreen("CONNECTED");
+		};
+		rt.websocket.onclose = function(evt) {
+
+			writeToScreen("DISCONNECTED");
+		};
+
+		rt.websocket.onerror = function(evt) {
+			writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+		};
+	}
+
+	function writeToScreen(message) {
+		var pre = document.createElement("p");
+		pre.style.wordWrap = "break-word";
+		pre.innerHTML = message;
+		output.appendChild(pre);
+	}
+
+	jQuery(document).ready(function() {
+		jQuery("input[name='connect']").click(function() {
+			init();
+		});
+
+		jQuery("input[name='authenticate']").click(function() {
+			var apikey = jQuery("#apikey").val();
+
+			//authenticate with apikey
+			rt.authenticate(apikey);
+		});
+
+		jQuery("input[name='subscribe']").click(function() {
+			var resourceId = jQuery("#resource").val();
+			
+			//subscribe to Observable Datastore
+			rt.datastoreSubscribe(resourceId);
+		});
+
+		jQuery("input[name='unsubscribe']").click(function() {
+			var resourceId = jQuery("#resource").val();
+
+			//unsubscribe from Observable Datastore
+			rt.datastoreUnsubscribe(resourceId);
+		});
+
+		jQuery("input[name='make-observable']").click(function() {
+			var datastore = jQuery("#datastore").val();
+			var apikey = jQuery("#apikey").val();
+			var apiRoot = jQuery("#api").val();
+
+			var data = {
+				resource_id : datastore,
+			};
+
+			//make an ordinary datastore into an Observable Datastore
+			jQuery.ajax({
+				url : apiRoot + 'datastore_make_observable',
+				type : 'POST',
+				beforeSend : function(request) {
+					request.setRequestHeader("Authorization", apikey);
+				},
+				data : JSON.stringify(data),
+				dataType : 'application/json',
+				success : function(data) {
+					console.log(data);
+				}
+			});
+
+			console.log('make observable: ' + datastore);
+		});
+	});
+
+</script>
+
+<h2>ckanext-realtime Example 1</h2>
+
+<label>WebSocket Server</label>
+<br>
+<input type="text" name="wss" id="wss" value="ws://127.0.0.1:9000/">
+<input type="button" name="connect" value="Connect">
+<br>
+<br>
+<label>1. Before you can start subscribing to events, you need to authenticate with your api key. Enter api key:</label>
+<br>
+<input type="text" name="apikey" id="apikey">
+<input type="button" name="authenticate" value="Authenticate">
+<br>
+<br>
+
+<label>2. In order to receive events from datastores you have to first make them "Observable Datastores". Enter datastore resource ID (you must provide api key in the above input field):</label>
+<br>
+<input type="text" name="datastore" id="datastore">
+<br>
+<label>and Action API Url:</label>
+<br>
+<input type="text" name="api" id="api" value="http://localhost:5000/api/3/action/">
+<br>
+<input type="button" name="make-observable" value="Make Observable">
+
+<br>
+<br>
+
+<label>3. Provided that you have authenticated with your API key, you can start subscribing to events from Observable Dastastores. Enter Resource ID for an Observable Datastore:</label>
+<br>
+<input type="text" name="resource" id="resource">
+<input type="button" name="subscribe" value="Subscribe">
+<input type="button" name="unsubscribe" value="Unsubscribe">
+
+<div id="output"></div>
+
+</html>

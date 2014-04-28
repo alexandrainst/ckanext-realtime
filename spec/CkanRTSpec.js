@@ -13,37 +13,27 @@ describe("CkanRT", function() {
 	});
 
 	describe("authentication", function() {
-		// the authentication process should be completed with success for the following expectations to work
 		describe("when a valid ckan api key is provided", function() {
-			beforeEach(function(done) {
+			it("should succeed", function() {
 				rt = new CkanRT(wsUri);
 				rt.websocket.onopen = function(evt) {
+					rt.onAuth = function(status) {
+						expect(status).toEqual('SUCCESS');
+					};
 					rt.authenticate("correctKey");
-					setTimeout(function() {
-						done();
-					}, PAUSE_BEFORE_RECONNECT);
 				};
-			});
-
-			it("should succeed", function() {
-				expect(rt.authenticated).toEqual(true);
 			});
 		});
 
 		describe("when an invalid ckan api key is provided", function() {
-			// the authentication process should be completed with failure for the following expectations to work
-			beforeEach(function(done) {
+			it("should fail", function() {
 				rt = new CkanRT(wsUri);
 				rt.websocket.onopen = function(evt) {
+					rt.onAuth = function(status) {
+						expect(status).toEqual('FAIL');
+					};
 					rt.authenticate("incorrectKey");
-					setTimeout(function() {
-						done();
-					}, PAUSE_BEFORE_RECONNECT);
 				};
-			});
-
-			it("should fail", function() {
-				expect(rt.authenticated).toEqual(false);
 			});
 		});
 	});

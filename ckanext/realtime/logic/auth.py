@@ -17,7 +17,7 @@ def realtime_auth(context, data_dict, privilege='resource_update'):
         return {'success': True}
 
 
-def realtime_broadcast_events(context, data_dict):
+def realtime_broadcast_event(context, data_dict):
     return realtime_auth(context, data_dict)
 
 

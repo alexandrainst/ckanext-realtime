@@ -94,33 +94,33 @@ class TestRealtimeActions(object):
                               status=409)
     
     # realtime_broadcast_events tests           
-    def test_broadcast_events_by_admin(self):
+    def test_broadcast_event_by_admin(self):
         resource = model.Package.get('annakarenina').resources[0]
   
-        tests.call_action_api(self.app, 'realtime_broadcast_events',
+        tests.call_action_api(self.app, 'realtime_broadcast_event',
                               resource_id=resource.id,
                               event_type='datastore_update',
                               apikey=self.sysadmin_user.apikey)
  
-    def test_broadcast_events_by_normal_user(self):
+    def test_broadcast_event_by_normal_user(self):
         # should it really be 409?
         resource = model.Package.get('annakarenina').resources[0]
    
-        tests.call_action_api(self.app, 'realtime_broadcast_events',
+        tests.call_action_api(self.app, 'realtime_broadcast_event',
                               resource_id=resource.id,
                               event_type='datastore_update',
                               apikey=self.normal_user.apikey,
                               status=409)
            
-    def test_broadcast_events_without_apikey(self):
+    def test_broadcast_event_without_apikey(self):
         resource = model.Package.get('annakarenina').resources[0]
-        tests.call_action_api(self.app, 'realtime_broadcast_events',
+        tests.call_action_api(self.app, 'realtime_broadcast_event',
                               resource_id=resource.id,
                               event_type='datastore_update',
                               status=403)
         
-    def test_broadcast_events_by_admin_bad_request(self): 
-        tests.call_action_api(self.app, 'realtime_broadcast_events',
+    def test_broadcast_event_by_admin_bad_request(self): 
+        tests.call_action_api(self.app, 'realtime_broadcast_event',
                               event_type='datastore_update',
                               apikey=self.sysadmin_user.apikey,
                               status=409)
