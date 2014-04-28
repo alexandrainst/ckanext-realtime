@@ -32,6 +32,7 @@ sed -i -e '/\[app:main\]/a ckan.realtime.redis_host = 127.0.0.1\nckan.realtime.r
 
 sed -i -e 's/^sqlalchemy.url.*/sqlalchemy.url = postgresql:\/\/ckan_default:pass@localhost\/ckan_default/' test-core.ini
 sed -i -e 's/.*datastore.write_url.*/ckan.datastore.write_url = postgresql:\/\/ckan_default:pass@localhost\/datastore_default/' test-core.ini
+sed -i -e '/\[app:main\]/a ckan.realtime.redis_host = 127.0.0.1\nckan.realtime.redis_port = 6379\nckan.realtime.wss_port = 9000' test-core.ini
 sed -i -e 's/.*datastore.read_url.*/ckan.datastore.read_url = postgresql:\/\/datastore_default@\/datastore_default/' test-core.ini
 
 ln -s "$CKAN_DIR"/test-core.ini "$PROJECT_DIR"/links/test-core.ini
