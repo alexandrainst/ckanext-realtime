@@ -1,6 +1,6 @@
 /*
- * These specs require the websocket server,
- * datastore listener and ckan to be running.
+ * These specs require the websocket server to be running in test mode:
+ * - python bin/ckan_wss <path_to_ckan_config> --test
  */
 var wsUri = "ws://127.0.0.1:9000/";
 var PAUSE_BEFORE_RECONNECT = 500;
@@ -14,11 +14,12 @@ describe("CkanRT", function() {
 
 	describe("authentication", function() {
 		describe("when a valid ckan api key is provided", function() {
-			it("should succeed", function() {
+			it("should succeed", function(done) {
 				rt = new CkanRT(wsUri);
 				rt.websocket.onopen = function(evt) {
 					rt.onAuth = function(status) {
 						expect(status).toEqual('SUCCESS');
+						done();
 					};
 					rt.authenticate("correctKey");
 				};
@@ -26,11 +27,12 @@ describe("CkanRT", function() {
 		});
 
 		describe("when an invalid ckan api key is provided", function() {
-			it("should fail", function() {
+			it("should fail", function(done) {
 				rt = new CkanRT(wsUri);
 				rt.websocket.onopen = function(evt) {
 					rt.onAuth = function(status) {
 						expect(status).toEqual('FAIL');
+						done();
 					};
 					rt.authenticate("incorrectKey");
 				};
@@ -85,7 +87,6 @@ describe("CkanRT", function() {
 					rt.datastoreSubscribe(resource);
 				};
 				rt.datastoreSubscribe(resource);
-
 			});
 		});
 
