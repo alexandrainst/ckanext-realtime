@@ -88,12 +88,20 @@ class message_handler_base(object):
         event = jsonpickle.decode(json_msg)
         resource_id = event.resource_id
         
+
+        
         log.msg('From Redis: ' + json_msg)
         
         if resource_id in self.resource_to_clients:
+            response = {'event': event.__dict__}
+            response['type'] = 'datastoreevent'
+            
+            #event_name is a class attribute so it wasn't in the __dict__
+            response['event']['name'] = event.event_name
+            
             for client in self.resource_to_clients[resource_id]:
                 log.msg('To WSC: ' +client.peer)
-                client.sendMessage(json_msg)
+                client.sendMessage(jsonpickle.encode(response))
     
     def _authenticate(self, request, client):
         success = False
@@ -104,14 +112,14 @@ class message_handler_base(object):
         if success:
             self.apikey_to_client[request['apikey_to_check']] = client
             log.msg(self.apikey_to_client)
-            return {'type': 'auth', 'result': True}
+            return {'type': 'auth', 'result': rt.SUCCESS_MESSAGE}
         else:
-            return {'type': 'auth', 'result': False}
+            return {'type': 'auth', 'result': rt.FAIL_MESSAGE}
         
     def _is_authenticated(self, client):
         authenticated = False
         log.msg(self.apikey_to_client)
-        for apikey, cl in self.apikey_to_client.iteritems():
+        for cl in self.apikey_to_client.values():
             log.msg(cl.peer)
             if cl == client:
                 authenticated = True
