@@ -52,4 +52,4 @@ pip install -r requirements.txt
 
 # start WebSocket server in test mode
 cd "$PROJECT_DIR"/bin
-python wss "$PROJECT_DIR"/links/development.ini --test &
+python ckan_wss "$PROJECT_DIR"/links/development.ini --test &
