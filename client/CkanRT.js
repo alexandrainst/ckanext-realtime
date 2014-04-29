@@ -4,10 +4,6 @@ function CkanRT(websocketUrl) {
 }
 
 // START BLOCK - these methods should be overriden by the API user
-CkanRT.prototype.onAuth = function(status) {
-
-};
-
 CkanRT.prototype.onDatastoreSubscribeResult = function(resourceId, status) {
 
 };
@@ -47,20 +43,9 @@ CkanRT.prototype.datastoreUnsubscribe = function(resourceId) {
 	this.websocket.send(JSON.stringify(packet));
 };
 
-CkanRT.prototype.authenticate = function(apiKey) {
-	var packet = {
-		type : 'auth',
-		apikey_to_check : apiKey
-	};
-	this.websocket.send(JSON.stringify(packet));
-};
-
 function messageReceived(message, rt) {
 	var payload = JSON.parse(message.data);
 	switch (payload.type) {
-		case 'auth':
-			rt.onAuth(payload.result);
-			break;
 		case 'datastoresubscribe':
 			rt.onDatastoreSubscribeResult(payload.resource_id, payload.result);
 			break;

@@ -13,12 +13,10 @@ class message_handler_base(object):
         MessageHandler or TestMessageHandler.
         
     '''
-    # TODO: reduce the number of state variables
 
     def __init__(self, api_url, apikey):
         self.api_url = api_url
         self.wss_api_key = apikey
-        self.apikey_to_client = {} #track authenticated clients
         self.resource_to_clients = {}
         
     def register_websocket_client(self, client):
@@ -39,10 +37,6 @@ class message_handler_base(object):
         
         '''
         log.msg("unregister client {}".format(client.peer))
-        for apikey, cl in self.apikey_to_client.iteritems():
-            if cl == client:
-                self.apikey_to_client.pop(apikey)
-                break
             
         for client_list in self.resource_to_clients.values():
             if client in client_list:
@@ -62,9 +56,7 @@ class message_handler_base(object):
         '''
         request = jsonpickle.decode(json_msg)
         response = None
-        if request['type'] == 'auth':
-            response = self._authenticate(request, client)
-        elif request['type'] == 'datastoresubscribe':
+        if request['type'] == 'datastoresubscribe':
             response = self._datastore_subscribe(request, client)
         elif request['type'] == 'datastoreunsubscribe':
             response = self._datastore_unsubscribe(request, client)
@@ -85,12 +77,10 @@ class message_handler_base(object):
         :type json_msg: basestring
         
         '''
+        log.msg('From Redis: ' + json_msg)
+        
         event = jsonpickle.decode(json_msg)
         resource_id = event.resource_id
-        
-
-        
-        log.msg('From Redis: ' + json_msg)
         
         if resource_id in self.resource_to_clients:
             response = {'event': event.__dict__}
@@ -103,39 +93,13 @@ class message_handler_base(object):
                 log.msg('To WSC: ' +client.peer)
                 client.sendMessage(jsonpickle.encode(response))
     
-    def _authenticate(self, request, client):
-        success = False
-        
-        if not request['apikey_to_check'] in self.apikey_to_client and self._check_apikey(request['apikey_to_check']):
-            success = True
-        
-        if success:
-            self.apikey_to_client[request['apikey_to_check']] = client
-            log.msg(self.apikey_to_client)
-            return {'type': 'auth', 'result': rt.SUCCESS_MESSAGE}
-        else:
-            return {'type': 'auth', 'result': rt.FAIL_MESSAGE}
-        
-    def _is_authenticated(self, client):
-        authenticated = False
-        log.msg(self.apikey_to_client)
-        for cl in self.apikey_to_client.values():
-            log.msg(cl.peer)
-            if cl == client:
-                authenticated = True
-                break
-        return authenticated
-    
     def _datastore_unsubscribe(self, request, client):
         resource_id = request['resource_id']
-        if not self._is_authenticated(client):
-            result = rt.FAIL_MESSAGE
-        else:
-            result = rt.SUCCESS_MESSAGE if self._remove_subscription(resource_id, client) else rt.FAIL_MESSAGE
+        result = rt.SUCCESS_MESSAGE if self._remove_subscription(resource_id, client) else rt.FAIL_MESSAGE
+        
         return {'type': 'datastoreunsubscribe',
                 'resource_id': resource_id,
                 'result': result}
-        
     
     def _add_subscribtion(self, resource_id, client):
         if not resource_id in self.resource_to_clients:
@@ -163,34 +127,11 @@ class MessageHandler(message_handler_base):
     '''
     def __init__(self, api_url, apikey):
         message_handler_base.__init__(self, api_url, apikey)
-        
-    def _check_apikey(self, apikey):
-        # FIXME: should we encrypt the api_key of the client?
-
-        # make a call to the CKAN API to see if the provided apikey is valid
-        url = urlparse.urljoin(self.api_url, 'realtime_check_apikey')
-        payload = {'apikey_to_check': apikey}
-        r = requests.post(url,
-                          data=jsonpickle.encode(payload),
-                          headers={'Authorization': self.wss_api_key,
-                                   'Content-Type': 'application/json'})
-
-        # read response from the CKAN API
-        response = jsonpickle.decode(r.text)
-        log.msg(response)
-        if response['result']['exists']:
-            return True
-        return False
 
     def _datastore_subscribe(self, request, client):
-        # ask the CKAN API if the datastore is observable
-        if not self._is_authenticated(client):
-            return {'type': 'datastoresubscribe',
-                    'resource_id': request['resource_id'],
-                    'result': rt.FAIL_MESSAGE}
-            
         resource_id = request['resource_id']
         
+        # ask the CKAN API if the datastore is observable
         url = urlparse.urljoin(self.api_url, 'realtime_check_observable_datastore')
         payload = {'resource_id': resource_id}
         r = requests.post(url,
@@ -235,12 +176,6 @@ class TestMessageHandler(message_handler_base):
     
     def __init__(self, api_url, apikey):
         message_handler_base.__init__(self, api_url, apikey)
-        
-    def _check_apikey(self, apikey):
-        if apikey == 'correctKey':
-            return True
-        else:
-            return False
 
     def _datastore_subscribe(self, request, client):        
         resource_id = request['resource_id']

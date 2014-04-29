@@ -64,35 +64,6 @@ def datastore_make_observable(context, data_dict):
     db.add_datastore_notifier_trigger(data_dict['resource_id'])
     
     
-def realtime_check_apikey(context, data_dict):
-    '''Check whether a particular apikey exists.
-    
-    :param apikey_to_check: target apikey
-    :type api_key_to_check: string
-    
-    :return: whether the apikey exists
-    :rtype: dictionary
-    
-    '''
-    schema = context.get('schema',
-                         realtime_schema.realtime_check_apikey_schema())
-    
-    data_dict, errors = _validate(data_dict, schema, context)
-    if errors:
-        raise p.toolkit.ValidationError(errors)
-    
-    p.toolkit.check_access('realtime_check_apikey', context, data_dict)
-    
-    query = model.Session.query(model.User)
-    user = query.filter_by(apikey=data_dict['apikey_to_check']).first()
-    log.info('Checking api key: ' + data_dict['apikey_to_check'])
-    log.info(user)
-    if user:
-        return {'exists': True}
-    else:
-        return {'exists': False}
-    
-    
 def realtime_check_observable_datastore(context, data_dict):
     '''Check whether a particular datastore is observable
     
