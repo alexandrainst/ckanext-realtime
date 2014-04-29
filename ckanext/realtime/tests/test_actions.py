@@ -125,32 +125,6 @@ class TestRealtimeActions(object):
                               apikey=self.sysadmin_user.apikey,
                               status=409)
     
-    # realtime_check_apikey tests    
-    def test_check_apikey_by_admin(self):
-        res = tests.call_action_api(self.app, 'realtime_check_apikey',
-                                    apikey_to_check=self.normal_user.apikey,
-                                    apikey=self.sysadmin_user.apikey)
-        
-        assert res['exists']
-    
-    def test_check_invalid_apikey_by_admin(self):
-        res = tests.call_action_api(self.app, 'realtime_check_apikey',
-                                    apikey_to_check='invalidkey',
-                                    apikey=self.sysadmin_user.apikey)
-        
-        assert not res['exists']
-    
-    def test_check_apikey_by_normal_user(self):
-        tests.call_action_api(self.app, 'realtime_check_apikey',
-                                    apikey_to_check=self.sysadmin_user.apikey,
-                                    apikey=self.normal_user.apikey,
-                                    status=409)
-    
-    def test_check_apikey_without_apikey(self):
-        tests.call_action_api(self.app, 'realtime_check_apikey',
-                                    apikey_to_check=self.sysadmin_user.apikey,
-                                    status=403)
-        
     # realtime_check_observable_datastore tests
     def test_check_observable_datastore_by_admin(self):
         resource = model.Package.get('annakarenina').resources[0]
