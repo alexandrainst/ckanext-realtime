@@ -3,53 +3,22 @@
  * - python bin/ckan_wss <path_to_ckan_config> --test
  */
 var wsUri = "ws://127.0.0.1:9000/";
-var PAUSE_BEFORE_RECONNECT = 500;
+
 describe("CkanRT", function() {
 	var rt;
 
-	//should close the websocket after each expectation
-	afterEach(function() {
-		rt.websocket.close();
-	});
-
-	describe("authentication", function() {
-		describe("when a valid ckan api key is provided", function() {
-			it("should succeed", function(done) {
-				rt = new CkanRT(wsUri);
-				rt.websocket.onopen = function(evt) {
-					rt.onAuth = function(status) {
-						expect(status).toEqual('SUCCESS');
-						done();
-					};
-					rt.authenticate("correctKey");
-				};
-			});
-		});
-
-		describe("when an invalid ckan api key is provided", function() {
-			it("should fail", function(done) {
-				rt = new CkanRT(wsUri);
-				rt.websocket.onopen = function(evt) {
-					rt.onAuth = function(status) {
-						expect(status).toEqual('FAIL');
-						done();
-					};
-					rt.authenticate("incorrectKey");
-				};
-			});
-		});
-	});
-
 	describe("subscribing/unsubscribing from observable datastores", function() {
-		// the authentication process should be completed with success for the following expectations to work
+		//should initiate WebSocket connection before each expectation
 		beforeEach(function(done) {
 			rt = new CkanRT(wsUri);
-			rt.websocket.onopen = function(evt) {
-				rt.authenticate("correctKey");
-				setTimeout(function() {
-					done();
-				}, PAUSE_BEFORE_RECONNECT);
+			rt.websocket.onopen = function() {
+				done();
 			};
+		});
+
+		//should close the WebSocket connection after each expectation
+		afterEach(function() {
+			rt.websocket.close();
 		});
 
 		describe("when you subscribe/unsubscribe from observable datastores", function() {
@@ -140,10 +109,6 @@ describe("CkanRT", function() {
 				};
 				rt.datastoreSubscribe(resource);
 			});
-		});
-
-		afterEach(function() {
-			rt.websocket.close();
 		});
 	});
 });

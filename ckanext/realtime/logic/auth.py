@@ -24,8 +24,6 @@ def realtime_broadcast_event(context, data_dict):
 def datastore_make_observable(context, data_dict):
     return realtime_auth(context, data_dict)
 
-def realtime_check_apikey(context, data_dict):
-    return realtime_auth(context, data_dict)
 
 def realtime_check_observable_datastore(context, data_dict):
     return realtime_auth(context, data_dict)

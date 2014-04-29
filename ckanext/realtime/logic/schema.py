@@ -26,12 +26,6 @@ def datastore_make_observable_schema():
               }
     return schema
 
-def realtime_check_apikey_schema():
-    schema = {
-              'apikey_to_check': [_not_empty, unicode],
-              }
-    return schema
-
 def realtime_check_observable_datastore_schema():
     schema = {
               'resource_id': [_not_empty, unicode, _resource_id_exists],

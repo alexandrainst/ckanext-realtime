@@ -10,22 +10,13 @@
 <script language="javascript" type="text/javascript">
 	var output;
 	var rt;
+	var wsUri;
 
-	function init() {
-		output = document.getElementById("output");
-		var wsUri = jQuery("#wss").val();
-		initializeConnection(wsUri);
-	}
-
-	function initializeConnection(wsUri) {
-
+	function initializeConnection() {
+		wsUri = jQuery("#wss").val();
 		rt = new CkanRT(wsUri);
 		
 		// define CkanRT callbacks
-		rt.onAuth = function() {
-			writeToScreen('<span style="color: blue;">RESPONSE: authenticated</span>');
-		};
-
 		rt.onDatastoreSubscribeResult = function(resourceId, status) {
 			writeToScreen('<span style="color: blue;">Subscribe to ' + resourceId + '. Status: ' + status + '</span>');
 		};
@@ -62,15 +53,10 @@
 	}
 
 	jQuery(document).ready(function() {
+		output = document.getElementById("output");
+		
 		jQuery("input[name='connect']").click(function() {
-			init();
-		});
-
-		jQuery("input[name='authenticate']").click(function() {
-			var apikey = jQuery("#apikey").val();
-
-			//authenticate with apikey
-			rt.authenticate(apikey);
+			initializeConnection();
 		});
 
 		jQuery("input[name='subscribe']").click(function() {
@@ -95,6 +81,8 @@
 			var data = {
 				resource_id : datastore,
 			};
+			
+			writeToScreen('<span style="color: blue;">Make ' + datastore + ' observable. </span>');
 
 			//make an ordinary datastore into an Observable Datastore
 			jQuery.ajax({
@@ -109,8 +97,7 @@
 					console.log(data);
 				}
 			});
-
-			console.log('make observable: ' + datastore);
+			
 		});
 	});
 
@@ -124,17 +111,13 @@
 <input type="button" name="connect" value="Connect">
 <br>
 <br>
-<label>1. Before you can start subscribing to events, you need to authenticate with your api key. Enter api key:</label>
-<br>
-<input type="text" name="apikey" id="apikey">
-<input type="button" name="authenticate" value="Authenticate">
-<br>
-<br>
 
-<label>2. In order to receive events from datastores you have to first make them "Observable Datastores". Enter datastore resource ID (you must provide api key in the above input field):</label>
+<label>1. In order to receive events from datastores you have to first make them "Observable Datastores" (call datastore_make_observable Action API function which inserts a notifier trigger on the particular datastore). Enter datastore resource ID:</label>
 <br>
 <input type="text" name="datastore" id="datastore">
 <br>
+<label>Action API Key:</label><br>
+<input type="text" name="apikey" id="apikey"><br>
 <label>and Action API Url:</label>
 <br>
 <input type="text" name="api" id="api" value="http://localhost:5000/api/3/action/">
@@ -144,7 +127,7 @@
 <br>
 <br>
 
-<label>3. Provided that you have authenticated with your API key, you can start subscribing to events from Observable Dastastores. Enter Resource ID for an Observable Datastore:</label>
+<label>2. Here you can subscribe to Observable Datastores. Enter Resource ID for an Observable Datastore:</label>
 <br>
 <input type="text" name="resource" id="resource">
 <input type="button" name="subscribe" value="Subscribe">
