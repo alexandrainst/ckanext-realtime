@@ -14,7 +14,7 @@ For more info read the `docs <http://alexandrainst.github.io/ckanext-realtime/>`
 Copying and License
 -------------------
 
-This material is copyright (c) 2014 `Alexandra Instituttet A/S <http://www.alexandra.dk/uk/pages/default.aspx>`_.
+This material is copyright (c) 2014 `Alexandra Instituttet A/S <http://www.alexandra.dk/uk/pages/default.aspx>`_ and `Gatesense <http://www.gatesense.com>`_.
 
 It is open and licensed under the GNU Affero General Public License (AGPL) v3.0
 whose full text may be found at:
@@ -52,7 +52,7 @@ Installation
 	
 	| *$ pip install -r requirements.txt*
 	 
-#. Set ckanext-realtime specific configuration options in you ckan config (e.g. /etc/ckan/default/production.ini):
+#. Set ckanext-realtime specific configuration options in your ckan config (e.g. /etc/ckan/default/production.ini):
 	
 	| *# ckanext-realtime settings*
 	|
@@ -83,11 +83,11 @@ After installing and configuring the plugin, start up CKAN and Redis.
 Then start the Datastore Listener script so that it can 
 notify you about changes to Observable Datastores using PostgreSQL LISTEN/NOTIFY feature:
 	
-	| $ python bin/datastore_listener /etc/ckan/default/development.ini
+	| *$ python bin/datastore_listener /etc/ckan/default/development.ini*
 	
 Lastly, start the WebSocket server:
 
-	| $ python bin/ckan_wss /etc/ckan/default/development.ini
+	| *$ python bin/ckan_wss /etc/ckan/default/development.ini*
 	
 Now you are ready to run the client examples found in client/examples folder of the project. 
 
@@ -102,7 +102,7 @@ Running Jasmine Specs
 ---------------------
 First, install jasmine test runner gem:
 
-	| $ gem install jasmine
+	| *$ gem install jasmine*
 	
 
 Start the WebSocket server in the test mode:

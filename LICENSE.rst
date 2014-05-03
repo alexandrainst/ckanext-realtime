@@ -2,7 +2,8 @@ License
 +++++++
 
 ckanext-realtime - CKAN extension which enables CKAN to serve realtime data
-Copyright (C) 2014 Alexandra Instituttet A/S
+
+Copyright (C) 2014 `Alexandra Instituttet A/S <http://www.alexandra.dk/uk/pages/default.aspx>`_ and `Gatesense <http://www.gatesense.com>`_
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
