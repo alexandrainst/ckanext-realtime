@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ckanext-realtime &mdash; ckanext-realtime 0.1 documentation</title>
+  <title>ckanext-realtime &mdash; ckanext-realtime 0.3.2 documentation</title>
   
 
   
@@ -28,7 +28,7 @@
   
 
   
-    <link rel="top" title="ckanext-realtime 0.1 documentation" href="index.html"/>
+    <link rel="top" title="ckanext-realtime 0.3.2 documentation" href="index.html"/>
         <link rel="prev" title="Welcome to ckanext-realtime’s documentation!" href="index.html"/> 
 
   
@@ -113,7 +113,7 @@ can subscribe to realtime events from <em>Observable Datastores</em>.</p>
 <p>For more info read the <a class="reference external" href="http://alexandrainst.github.io/ckanext-realtime/">docs</a>. Feel free to submit your ideas and pull requests if you would like to contribute.</p>
 <div class="section" id="copying-and-license">
 <h2>Copying and License<a class="headerlink" href="#copying-and-license" title="Permalink to this headline">¶</a></h2>
-<p>This material is copyright (c) 2014 <a class="reference external" href="http://www.alexandra.dk/uk/pages/default.aspx">Alexandra Instituttet A/S</a>.</p>
+<p>This material is copyright (c) 2014 <a class="reference external" href="http://www.alexandra.dk/uk/pages/default.aspx">Alexandra Instituttet A/S</a> and <a class="reference external" href="http://www.gatesense.com">Gatesense</a>.</p>
 <p>It is open and licensed under the GNU Affero General Public License (AGPL) v3.0
 whose full text may be found at:</p>
 <p><a class="reference external" href="http://www.fsf.org/licensing/licenses/agpl-3.0.html">http://www.fsf.org/licensing/licenses/agpl-3.0.html</a></p>
@@ -156,7 +156,7 @@ whose full text may be found at:</p>
 </div>
 </div></blockquote>
 </li>
-<li><p class="first">Set ckanext-realtime specific configuration options in you ckan config (e.g. /etc/ckan/default/production.ini):</p>
+<li><p class="first">Set ckanext-realtime specific configuration options in your ckan config (e.g. /etc/ckan/default/production.ini):</p>
 <blockquote>
 <div><div class="line-block">
 <div class="line"><em># ckanext-realtime settings</em></div>
@@ -195,13 +195,13 @@ Then start the Datastore Listener script so that it can
 notify you about changes to Observable Datastores using PostgreSQL LISTEN/NOTIFY feature:</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">$ python bin/datastore_listener /etc/ckan/default/development.ini</div>
+<div class="line"><em>$ python bin/datastore_listener /etc/ckan/default/development.ini</em></div>
 </div>
 </div></blockquote>
 <p>Lastly, start the WebSocket server:</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">$ python bin/ckan_wss /etc/ckan/default/development.ini</div>
+<div class="line"><em>$ python bin/ckan_wss /etc/ckan/default/development.ini</em></div>
 </div>
 </div></blockquote>
 <p>Now you are ready to run the client examples found in client/examples folder of the project.</p>
@@ -221,7 +221,7 @@ In order to run python tests, you have to start solr server and run this command
 <p>First, install jasmine test runner gem:</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">$ gem install jasmine</div>
+<div class="line"><em>$ gem install jasmine</em></div>
 </div>
 </div></blockquote>
 <p>Start the WebSocket server in the test mode:</p>
@@ -261,7 +261,7 @@ In order to run python tests, you have to start solr server and run this command
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Alexandra Institute.
+        &copy; Copyright 2014, Alexandra Institute and Gatesense.
     </p>
   </div>
 
@@ -281,7 +281,7 @@ In order to run python tests, you have to start solr server and run this command
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1',
+            VERSION:'0.3.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
