@@ -72,19 +72,6 @@ describe("CkanRT", function() {
 			});
 		});
 
-		describe("when you subscribe to non-observable datastores", function() {
-			it("should fail", function(done) {
-				var resource = "nonObservableResource";
-				var expectedResult = "FAIL";
-				rt.onDatastoreSubscribeResult = function(resourceId, status) {
-					expect(resourceId).toEqual(resource);
-					expect(status).toEqual(expectedResult);
-					done();
-				};
-				rt.datastoreSubscribe(resource);
-			});
-		});
-
 		describe("when you subscribe to non-datastore resources", function() {
 			it("should fail with error", function(done) {
 				var resource = "nonDatastoreResource";

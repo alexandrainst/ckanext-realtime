@@ -4,8 +4,8 @@
 
 <title>ckanext-realtime Example 1</title>
 
-<script src="jquery-1.11.0.min.js"></script>
-<script type="text/javascript" src="../CkanRT.js"></script>
+<script src="../jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="../../CkanRT.js"></script>
 
 <script language="javascript" type="text/javascript">
 	var output;
@@ -15,7 +15,7 @@
 	function initializeConnection() {
 		wsUri = jQuery("#wss").val();
 		rt = new CkanRT(wsUri);
-		
+
 		// define CkanRT callbacks
 		rt.onDatastoreSubscribeResult = function(resourceId, status) {
 			writeToScreen('<span style="color: blue;">Subscribe to ' + resourceId + '. Status: ' + status + '</span>');
@@ -28,7 +28,7 @@
 		rt.onDatastoreEvent = function(event) {
 			writeToScreen('<span style="color: blue;">New event ' + JSON.stringify(event) + '</span>');
 		};
-		
+
 		//end of CkanRT specific callbacks
 
 		//some WebSocket callbacks
@@ -52,16 +52,17 @@
 		output.appendChild(pre);
 	}
 
+
 	jQuery(document).ready(function() {
 		output = document.getElementById("output");
-		
+
 		jQuery("input[name='connect']").click(function() {
 			initializeConnection();
 		});
 
 		jQuery("input[name='subscribe']").click(function() {
 			var resourceId = jQuery("#resource").val();
-			
+
 			//subscribe to Observable Datastore
 			rt.datastoreSubscribe(resourceId);
 		});
@@ -71,33 +72,6 @@
 
 			//unsubscribe from Observable Datastore
 			rt.datastoreUnsubscribe(resourceId);
-		});
-
-		jQuery("input[name='make-observable']").click(function() {
-			var datastore = jQuery("#datastore").val();
-			var apikey = jQuery("#apikey").val();
-			var apiRoot = jQuery("#api").val();
-
-			var data = {
-				resource_id : datastore,
-			};
-			
-			writeToScreen('<span style="color: blue;">Make ' + datastore + ' observable. </span>');
-
-			//make an ordinary datastore into an Observable Datastore
-			jQuery.ajax({
-				url : apiRoot + 'datastore_make_observable',
-				type : 'POST',
-				beforeSend : function(request) {
-					request.setRequestHeader("Authorization", apikey);
-				},
-				data : JSON.stringify(data),
-				dataType : 'application/json',
-				success : function(data) {
-					console.log(data);
-				}
-			});
-			
 		});
 	});
 
@@ -112,27 +86,12 @@
 <br>
 <br>
 
-<label>1. In order to receive events from datastores you have to first make them "Observable Datastores" (call datastore_make_observable Action API function which inserts a notifier trigger on the particular datastore). Enter datastore resource ID:</label>
-<br>
-<input type="text" name="datastore" id="datastore">
-<br>
-<label>Action API Key:</label><br>
-<input type="text" name="apikey" id="apikey"><br>
-<label>and Action API Url:</label>
-<br>
-<input type="text" name="api" id="api" value="http://localhost:5000/api/3/action/">
-<br>
-<input type="button" name="make-observable" value="Make Observable">
-
-<br>
-<br>
-
-<label>2. Here you can subscribe to Observable Datastores. Enter Resource ID for an Observable Datastore:</label>
+<label>Here you can subscribe to realtime events of Datastores. Enter Resource ID of a Datastore:</label>
 <br>
 <input type="text" name="resource" id="resource">
 <input type="button" name="subscribe" value="Subscribe">
 <input type="button" name="unsubscribe" value="Unsubscribe">
+<br><br>
+<label>After you have subscribed to a datastore, try modifying data in it (CRUD) and observe the events in the log below</label>
 
 <div id="output"></div>
-
-</html>

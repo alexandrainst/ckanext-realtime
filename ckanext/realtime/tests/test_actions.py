@@ -195,7 +195,7 @@ class TestRealtimeActions(object):
         assert res['is_observable'] == rt.NON_DATASTORE_MESSAGE
     
     
-    def test_invalid_resource(self):
+    def test_check_invalid_resource(self):
         # in observable?
         tests.call_action_api(self.app, 'realtime_check_observable_datastore',
                                     resource_id='invalidResource',

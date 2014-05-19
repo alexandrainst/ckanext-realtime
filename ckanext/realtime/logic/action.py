@@ -6,7 +6,6 @@ import sqlalchemy
 
 import ckan.lib.navl.dictization_functions
 import ckan.plugins as p
-import ckan.model as model
 import ckanext.realtime as rt
 import ckanext.realtime.db as db
 from ckanext.realtime.event.event_dispatcher import EventDispatcher
@@ -61,7 +60,10 @@ def datastore_make_observable(context, data_dict):
     
     p.toolkit.check_access('datastore_make_observable', context, data_dict)
 
+    if not _datastore_exists(data_dict):
+        return {'success': False}
     db.add_datastore_notifier_trigger(data_dict['resource_id'])
+    return {'success': True}
     
     
 def realtime_check_observable_datastore(context, data_dict):
