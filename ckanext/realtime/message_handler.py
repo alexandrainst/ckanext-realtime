@@ -154,7 +154,7 @@ class MessageHandler(message_handler_base):
         # decide what to do
         is_observable = response['result']['is_observable']
         if is_observable == rt.YES_MESSAGE:
-            result = rt.SUCCESS_MESSAGE if self._add_subscribtion(resource_id, client) else rt.FAIL_MESSAGE 
+            result = rt.SUCCESS_MESSAGE if self._add_subscribtion(resource_id, client) else rt.FAIL_MESSAGE
             
             return {'type': 'datastoresubscribe', 
                     'resource_id': request['resource_id'],

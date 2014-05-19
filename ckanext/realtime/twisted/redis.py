@@ -18,7 +18,7 @@ def connect_event_processor(redis_host, redis_port,
     '''
     
     client_creator = protocol.ClientCreator(reactor, 
-                                            CKANEventProcessorProtocol,
+                                            CkanEventProcessorProtocol,
                                             websocket_factory)
     
     d = client_creator.connectTCP(redis_host, redis_port)
@@ -38,7 +38,7 @@ def _connection_failure(error):
     log.err(error)
 
 
-class CKANEventProcessorProtocol(RedisSubscriber):
+class CkanEventProcessorProtocol(RedisSubscriber):
     '''txredis-powered subscriber for receiving realtime events from CKAN'''
     
     def __init__(self, websocket_factory):

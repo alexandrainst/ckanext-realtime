@@ -6,7 +6,6 @@ import sqlalchemy
 
 import ckan.lib.navl.dictization_functions
 import ckan.plugins as p
-import ckan.model as model
 import ckanext.realtime as rt
 import ckanext.realtime.db as db
 from ckanext.realtime.event.event_dispatcher import EventDispatcher
