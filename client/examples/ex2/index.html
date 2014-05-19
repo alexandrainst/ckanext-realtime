@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<meta charset="utf-8" />
+
+<title>ckanext-realtime Showcase</title>
+
+<script src="../jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="../../CkanRT.js"></script>
+
+<script language="javascript" type="text/javascript">
+	var log;
+	var rt;
+	
+	// change these variables accordingly to fit your CKAN instance
+	var wsUri = 'ws://gatesense.com:9998/';
+	var datastore = '07324b49-37d8-4c43-8077-df0f8a430f79';
+	var actionApiRoot = 'http://gatesense.com/ckan/api/3/action/';
+	var apikey = 'd5e6601f-4f73-4298-b06f-dec1191c28d4';
+
+	function initializeConnection() {
+		rt = new CkanRT(wsUri);
+
+		// define CkanRT callbacks
+		rt.onDatastoreSubscribeResult = function(resourceId, status) {
+			writeToScreen('<span style="color: blue;">Subscribe to ' + resourceId + '. Status: ' + status + '</span>');
+		};
+
+		rt.onDatastoreUnsubscribeResult = function(resourceId, status) {
+			writeToScreen('<span style="color: blue;">Unsubscribe from ' + resourceId + '. Status: ' + status + '</span>');
+		};
+
+		rt.onDatastoreEvent = function(event) {
+			writeToScreen('<span style="color: blue;">New event ' + JSON.stringify(event) + '</span>');
+			
+			//refresh preview iframe
+			document.getElementById('preview').contentWindow.location.reload(true);
+		};
+
+		//end of CkanRT specific callbacks
+
+		//some WebSocket callbacks
+		rt.websocket.onopen = function(evt) {
+			writeToScreen("CONNECTED");
+			rt.datastoreSubscribe(datastore);
+			// loadDatastore(datastore);
+		};
+		rt.websocket.onclose = function(evt) {
+
+			writeToScreen("DISCONNECTED");
+		};
+
+		rt.websocket.onerror = function(evt) {
+			writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+		};
+	}
+
+	function insertToDatastore(msg, datastore) {
+		var now = new Date();
+		var data = {
+			resource_id : datastore,
+			records : [{
+				message : msg,
+				timestamp : now.toISOString()
+			}],
+		};
+
+		console.log(JSON.stringify(data));
+
+		writeToScreen('<span style="color: blue;">Inserting into ' + datastore + '</span>');
+
+		jQuery.ajax({
+			url : actionApiRoot + 'datastore_create',
+			type : 'POST',
+			beforeSend : function(request) {
+				request.setRequestHeader("Authorization", apikey);
+			},
+			data : JSON.stringify(data),
+			dataType : 'application/json',
+			success : function(data) {
+				console.log(data);
+			}
+		});
+	}
+
+	function deleteFromDatastore(msg, datastore) {
+		var data = {
+			resource_id : datastore,
+			filters : {
+				message : msg
+			},
+		};
+
+		console.log(JSON.stringify(data));
+
+		writeToScreen('<span style="color: blue;">Deleting from ' + datastore + '</span>');
+
+		jQuery.ajax({
+			url : actionApiRoot + 'datastore_delete',
+			type : 'POST',
+			beforeSend : function(request) {
+				request.setRequestHeader("Authorization", apikey);
+			},
+			data : JSON.stringify(data),
+			dataType : 'application/json',
+			success : function(data) {
+				console.log(data);
+			}
+		});
+	}
+
+	function writeToScreen(message) {
+		var pre = document.createElement("p");
+		pre.style.wordWrap = "break-word";
+		pre.innerHTML = message;
+		log.appendChild(pre);
+	}
+
+
+	jQuery(document).ready(function() {
+		initializeConnection();
+
+		log = document.getElementById("log");
+
+		jQuery("input[name='insert']").click(function() {
+			var message = jQuery("#message").val();
+			insertToDatastore(message, datastore);
+		});
+
+		jQuery("input[name='delete']").click(function() {
+			var msg = jQuery("#delete-message").val();
+
+			deleteFromDatastore(msg, datastore);
+		});
+	});
+
+</script>
+
+<div id="input">
+	<label>Insert Into Datastore</label>
+	<br>
+	<input type="text" name="message" id="message">
+	<input type="button" name="insert" value="Insert">
+	<br>
+	<br>
+	<label>Delete from Datastore by message</label>
+	<br>
+	<input type="text" name="delete-message" id="delete-message">
+	<input type="button" name="delete" value="Delete">
+</div>
+<br>
+<div id="output">
+	<iframe id="preview" src="http://gatesense.com/ckan/dataset/ckanext-realtime-showcase/resource/07324b49-37d8-4c43-8077-df0f8a430f79/preview" width="700" height="600"></iframe>
+</div>
+<br>
+<div id="log"></div>
