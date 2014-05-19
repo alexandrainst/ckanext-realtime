@@ -129,6 +129,18 @@ class MessageHandler(message_handler_base):
         message_handler_base.__init__(self, api_url, apikey)
 
     def _datastore_subscribe(self, request, client):
+        
+        def datastore_make_observable(resource_id, apikey):
+            url = urlparse.urljoin(self.api_url, 'datastore_make_observable')
+            payload = {'resource_id': resource_id}
+            r = requests.post(url,
+                              data=jsonpickle.encode(payload),
+                              headers={'Authorization': apikey,
+                                   'Content-Type': 'application/json'})
+            log.msg(r.text)
+            response = jsonpickle.decode(r.text)
+            return response['result']['success']
+            
         resource_id = request['resource_id']
         
         # ask the CKAN API if the datastore is observable
@@ -154,16 +166,21 @@ class MessageHandler(message_handler_base):
         # decide what to do
         is_observable = response['result']['is_observable']
         if is_observable == rt.YES_MESSAGE:
-            result = rt.SUCCESS_MESSAGE if self._add_subscribtion(resource_id, client) else rt.FAIL_MESSAGE 
+            result = rt.SUCCESS_MESSAGE if self._add_subscribtion(resource_id, client) else rt.FAIL_MESSAGE
             
             return {'type': 'datastoresubscribe', 
                     'resource_id': request['resource_id'],
                     'result': result}
             
         elif is_observable == rt.NO_MESSAGE:
+            if datastore_make_observable(request['resource_id'], self.wss_api_key):
+                result = rt.SUCCESS_MESSAGE
+            else:
+                result = rt.FAIL_MESSAGE
+            
             return {'type': 'datastoresubscribe',
                     'resource_id': request['resource_id'],
-                    'result': rt.FAIL_MESSAGE}
+                    'result': result}
             
         elif is_observable == rt.NON_DATASTORE_MESSAGE:
             return {'type': 'datastoresubscribe', 
@@ -185,11 +202,6 @@ class TestMessageHandler(message_handler_base):
             return {'type': 'datastoresubscribe', 
                     'resource_id': resource_id,
                     'result': result}
-            
-        elif resource_id == 'nonObservableResource':
-            return {'type': 'datastoresubscribe',
-                    'resource_id': resource_id,
-                    'result': rt.FAIL_MESSAGE}
             
         elif resource_id == 'nonDatastoreResource':
             return {'type': 'datastoresubscribe',
