@@ -7,10 +7,12 @@ Listen for events from datastore tables using PostgreSQL LISTEN/NOTIFY.
 import argparse
 import ConfigParser
 import json
+import lockfile as lf
 import psycopg2.extensions
 import requests
 import select
 import sqlalchemy
+import sys
 import urlparse
 
 def call_ckan_api(notify, ckan_api_url, apikey):
@@ -75,7 +77,7 @@ def main(config):
 
     print "Waiting for notifications on channel 'ckanextrealtime'"
     while 1:
-        if select.select([conn],[],[],5) == ([],[],[]):  #5 second timeout
+        if select.select([conn], [], [], 5) == ([], [], []):  # 5 second timeout
             pass
         else:
             conn.poll()
@@ -88,9 +90,35 @@ def main(config):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Listen for events from PostgreSQL datastores with LISTEN/NOTIFY.')
     parser.add_argument("config")
+    parser.add_argument('--lock-file',
+                        dest='lock_file',
+                        help='Full path to lock file, in order to prevent several instances from running (E. g. in case you start this by a cronjob)')
+    parser.set_defaults(test=False, lock_file=None)
     args = parser.parse_args()
     
     config = ConfigParser.RawConfigParser()
     config.read(args.config)
     
-    main(config)
+    if args.lock_file:
+        lock = lf.LockFile(args.lock_file)
+        if lock.is_locked():
+            print 'Lock file already exists'
+            sys.exit()
+        
+        try:
+            lock.acquire()
+        except lf.AlreadyLocked:
+            print 'Already locked'
+            sys.exit()
+        except lf.LockFailed:
+            print 'Locking failure'
+            sys.exit()
+        else:
+            print 'Lock acquired'
+    
+    try:
+        main(config)
+    except:
+        if args.lock_file:
+            lock.release()
+            print 'Lock released'

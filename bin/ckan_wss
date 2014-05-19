@@ -11,6 +11,8 @@ import argparse
 import ConfigParser
 import sys
 
+import lockfile as lf
+
 from twisted.internet import reactor
 from twisted.python import log
 
@@ -18,9 +20,7 @@ import ckanext.realtime.event.datastore as de
 import ckanext.realtime.twisted.websocket as ws
 import ckanext.realtime.twisted.redis as rd
 
-def main(config, test):
-    log.startLogging(sys.stdout)
-    
+def main(config, test):    
     if not test:
         apikey = config.get('app:main', 'ckan.realtime.apikey')
         ckan_api_url = config.get('app:main', 'ckan.realtime.ckan_api_url')
@@ -31,7 +31,7 @@ def main(config, test):
         wss_port = config.get('app:main', 'ckan.realtime.wss_port')
         wss_url = 'ws://127.0.0.1:{}'.format(wss_port)
     else: 
-        #no need to connect to the real api if running in the test mode
+        # no need to connect to the real api if running in the test mode
         apikey = 'foo'
         ckan_api_url = 'foobar'
         
@@ -64,12 +64,38 @@ if __name__ == '__main__':
     
     # this flag is used for client testing sessions - it enables the 
     # WebSocket server to provide fake replies to the clients, in some cases
-    parser.add_argument('--test', dest='test', action='store_true')
-    parser.set_defaults(test=False)
+    parser.add_argument('--test', dest='test', action='store_true', help='Run the WebSocket server in test mode')
+    parser.add_argument('--lock-file', 
+                        dest='lock_file', 
+                        help='Full path to lock file, in order to prevent several instances from running (E. g. in case you start this by a cronjob)')
+    parser.set_defaults(test=False, lock_file=None)
     
     args = parser.parse_args()
     
     config = ConfigParser.RawConfigParser()
     config.read(args.config)
     
+    log.startLogging(sys.stdout)
+    
+    if args.lock_file:
+        lock = lf.LockFile(args.lock_file)
+        if lock.is_locked():
+            log.msg('Lock file already exists')
+            sys.exit()
+        
+        try:
+            lock.acquire()
+        except lf.AlreadyLocked:
+            log.msg('Already locked')
+            sys.exit()
+        except lf.LockFailed:
+            log.msg('Locking failure')
+            sys.exit()
+        else:
+            log.msg('Lock acquired')
+
     main(config, args.test)
+    
+    if args.lock_file:
+        lock.release()
+        log.msg('Lock released')
