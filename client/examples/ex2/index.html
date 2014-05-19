@@ -10,7 +10,7 @@
 <script language="javascript" type="text/javascript">
 	var log;
 	var rt;
-	
+
 	// change these variables accordingly to fit your CKAN instance
 	var wsUri = 'ws://gatesense.com:9998/';
 	var datastore = '07324b49-37d8-4c43-8077-df0f8a430f79';
@@ -31,7 +31,7 @@
 
 		rt.onDatastoreEvent = function(event) {
 			writeToScreen('<span style="color: blue;">New event ' + JSON.stringify(event) + '</span>');
-			
+
 			//refresh preview iframe
 			document.getElementById('preview').contentWindow.location.reload(true);
 		};
@@ -134,6 +134,14 @@
 	});
 
 </script>
+<h2>ckanext-realtime demostration</h2>
+<p>
+	Use the below controls to insert/delete data into the sample datastore.
+	With ckanext-realtime, every change (insert/update/delete) in datastores, subscibed to by some client, notifies that client  in realtime.
+	You may do with the realtime events what you will. In case of this sample app, the realtime events trigger refreshing of the datastore preview window.
+</p>
+
+<p>For more details about ckanext-realtime plugin refer to our github <a href="https://github.com/alexandrainst/ckanext-realtime">repo</a></p>
 
 <div id="input">
 	<label>Insert Into Datastore</label>
@@ -149,7 +157,7 @@
 </div>
 <br>
 <div id="output">
-	<iframe id="preview" src="http://gatesense.com/ckan/dataset/ckanext-realtime-showcase/resource/07324b49-37d8-4c43-8077-df0f8a430f79/preview" width="700" height="600"></iframe>
+	<iframe id="preview" src="http://gatesense.com/ckan/dataset/ckanext-realtime-showcase/resource/07324b49-37d8-4c43-8077-df0f8a430f79/preview" width="700" height="250"></iframe>
 </div>
 <br>
 <div id="log"></div>

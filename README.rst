@@ -7,7 +7,7 @@ ckanext-realtime
 ================
 
 **ckanext-realtime** is CKAN plugin which makes your CKAN site into a **Realtime Data Portal**. By using **CkanRT.js** library, client applications
-can subscribe to realtime events from *Observable Datastores*.
+can subscribe to realtime events from *Observable Datastores*. Check out our demo app `here <http://gatesense.com/realtime/examples/ex2/>`_.
 
 For more info read the `docs <http://alexandrainst.github.io/ckanext-realtime/>`_. Feel free to submit your ideas and pull requests if you would like to contribute.
 
