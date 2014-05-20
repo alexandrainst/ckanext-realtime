@@ -54,6 +54,7 @@
 		};
 	}
 
+        //insert a new tuple into the sample datastore
 	function insertToDatastore(msg, datastore) {
 		var now = new Date();
 		var data = {
@@ -82,6 +83,7 @@
 		});
 	}
 
+        //deletes from datastore using 'message' filter
 	function deleteFromDatastore(msg, datastore) {
 		var data = {
 			resource_id : datastore,
@@ -122,19 +124,18 @@
 		log = document.getElementById("log");
 
 		jQuery("input[name='insert']").click(function() {
-			var message = jQuery("#message").val();
-			insertToDatastore(message, datastore);
+			var msg = jQuery("#message").val();
+			insertToDatastore(msg, datastore);
 		});
 
 		jQuery("input[name='delete']").click(function() {
 			var msg = jQuery("#delete-message").val();
-
 			deleteFromDatastore(msg, datastore);
 		});
 	});
 
 </script>
-<h2>ckanext-realtime demostration</h2>
+<h2>ckanext-realtime demonstration</h2>
 <p>
 	Use the below controls to insert/delete data to/from the sample datastore.
 	With ckanext-realtime, every change (insert/update/delete) in datastores, subscibed to by some client, notifies that client  in realtime.
