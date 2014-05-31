@@ -29,6 +29,7 @@
 
   
     <link rel="top" title="ckanext-realtime 0.4 documentation" href="index.html"/>
+        <link rel="next" title="Realtime apps with CKAN (Tutorial)" href="tutorial.html"/>
         <link rel="prev" title="Welcome to ckanext-realtime’s documentation!" href="index.html"/> 
 
   
@@ -70,17 +71,17 @@
 <li class="toctree-l2"><a class="reference internal" href="#running-jasmine-specs">Running Jasmine Specs</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#realtime-apps-with-ckan-tutorial">Realtime apps with CKAN (Tutorial)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#intro">Intro</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tutorial">Tutorial</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-1-download-ckanrt-js-library">Step 1 - download CkanRT.js library</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-2-basic-structure">Step 2 - basic structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-3-insert-data">Step 3 - insert data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-4-connect-to-notification-server-and-subscribe-to-resource-notifications">Step 4 - connect to notification server and subscribe to resource notifications</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-5-reload-the-table-in-realtime">Step 5 - reload the table in realtime</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-6-we-re-done">Step 6 - We&#8217;re done!</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#what-s-next">What&#8217;s next?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Realtime apps with CKAN (Tutorial)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#intro">Intro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#tutorial">Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#step-1-download-ckanrt-js-library">Step 1 - download CkanRT.js library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#step-2-basic-structure">Step 2 - basic structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#step-3-insert-data">Step 3 - insert data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#step-4-connect-to-notification-server-and-subscribe-to-resource-notifications">Step 4 - connect to notification server and subscribe to resource notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#step-5-reload-the-table-in-realtime">Step 5 - reload the table in realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#step-6-we-re-done">Step 6 - We&#8217;re done!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#what-s-next">What&#8217;s next?</a></li>
 </ul>
 </li>
 </ul>
@@ -257,216 +258,14 @@ In order to run python tests, you have to start solr server and run this command
 </div></blockquote>
 </div>
 </div>
-<div class="section" id="realtime-apps-with-ckan-tutorial">
-<h1>Realtime apps with CKAN (Tutorial)<a class="headerlink" href="#realtime-apps-with-ckan-tutorial" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="intro">
-<h2>Intro<a class="headerlink" href="#intro" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://github.com/alexandrainst/ckanext-realtime">ckanext-realtime</a> is the latest contributions to Free Software from Gatesense team. It is an extension for CKAN open data platform which enables app developers to make realtime applications with CKAN. More specifically, you can subscribe to resources (datastores) and thus monitor their changes in realtime. gatesense.com is a realtime-enabled CKAN portal, among other things. This means that you can build realtime apps with datasets found at <a class="reference external" href="http://gatesense.com/ckan/dataset">http://gatesense.com/ckan/dataset</a> .</p>
-</div>
-<div class="section" id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
-<p>To complete this tutorial, you will need a CKAN data portal with ckanext-realtime installed and a bit of JavaScript, jQuery and HTML knowledge. CKAN Action API knowledge is not necessary as it is relatively straightforward. You may either setup your own CKAN instance or use <a class="reference external" href="http://gatesense.com">gatesense.com</a> because it already has ckanext-realtime installed on it.</p>
-</div>
-<div class="section" id="tutorial">
-<h2>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h2>
-<p>For this tutorial we will use a dummy dataset - <a class="reference external" href="http://gatesense.com/ckan/dataset/ckanext-realtime-showcase">ckanext-realtime showcase</a>. Alternatively, you can choose to use a dataset that contains real data like Realtime traffic data on <a class="reference external" href="http://gatesense.com/ckan/datasets">gatesense</a>.</p>
-<p>Our client application will reload resource presentation in realtime, every time some new data comes in (much like this <a class="reference external" href="http://gatesense.com/realtime/examples/ex2/">one</a> ).</p>
-<p>In order to achieve realtime, ckanext-realtime uses WebSocket protocol. The WebSocket server is running on ws://gatesense.com:9998/ .</p>
-</div>
-<div class="section" id="step-1-download-ckanrt-js-library">
-<h2>Step 1 - download CkanRT.js library<a class="headerlink" href="#step-1-download-ckanrt-js-library" title="Permalink to this headline">¶</a></h2>
-<p>CkanRT.js is a simple abstraction on top of Javascript WebSocket client. You can find it on <a class="reference external" href="https://github.com/alexandrainst/ckanext-realtime/blob/master/client/CkanRT.js">github</a>. Download it and place it in your app directory.</p>
-</div>
-<div class="section" id="step-2-basic-structure">
-<h2>Step 2 - basic structure<a class="headerlink" href="#step-2-basic-structure" title="Permalink to this headline">¶</a></h2>
-<p>We will start with an app with CkanRT and jQuery included which simply renders our resource data in a table:</p>
-<div class="highlight-html"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
-
-<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span> <span class="nt">/&gt;</span>
-
-<span class="nt">&lt;title&gt;</span>Realtime Apps with CKAN - Tutorial<span class="nt">&lt;/title&gt;</span>
-
-<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://code.jquery.com/jquery-1.11.0.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;CkanRT.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-
-<span class="nt">&lt;script </span><span class="na">language=</span><span class="s">&quot;javascript&quot;</span> <span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
-    <span class="kd">var</span> <span class="nx">datastore</span> <span class="o">=</span> <span class="s1">&#39;07324b49-37d8-4c43-8077-df0f8a430f79&#39;</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">actionApiRoot</span> <span class="o">=</span> <span class="s1">&#39;http://gatesense.com/ckan/api/3/action/&#39;</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">apikey</span> <span class="o">=</span> <span class="s1">&#39;&lt;your api key&gt;&#39;</span><span class="p">;</span>
-
-    <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nx">init</span><span class="p">();</span>
-    <span class="p">});</span>
-
-    <span class="kd">function</span> <span class="nx">init</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nx">reload</span><span class="p">();</span>
-    <span class="p">}</span>
-
-        <span class="c1">//get resource data via CKAN Action API and draw a table out of it</span>
-        <span class="kd">function</span> <span class="nx">reload</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
-                <span class="nx">url</span> <span class="o">:</span> <span class="nx">actionApiRoot</span> <span class="o">+</span> <span class="s1">&#39;datastore_search?resource_id=&#39;</span> <span class="o">+</span> <span class="nx">datastore</span> <span class="o">+</span> <span class="s1">&#39;&amp;sort=_id&#39;</span><span class="p">,</span>
-                <span class="nx">type</span> <span class="o">:</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span>
-                <span class="nx">success</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-
-                        <span class="c1">// iterate through results and construct a table out of them</span>
-                    <span class="kd">var</span> <span class="nx">table</span> <span class="o">=</span> <span class="s1">&#39;&lt;table border=&quot;1&quot; style=&quot;border-collapse: collapse&quot;&gt;&lt;tr&gt;&lt;th&gt;_id&lt;/th&gt;&lt;th&gt;message&lt;/th&gt;&lt;th&gt;timestamp&lt;/th&gt;&lt;/tr&gt;&#39;</span><span class="p">;</span>
-                    <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="k">in</span> <span class="nx">data</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">records</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="kd">var</span> <span class="nx">current</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">records</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
-                        <span class="nx">table</span> <span class="o">+=</span> <span class="s1">&#39;&lt;tr&gt;&lt;td&gt;&#39;</span> <span class="o">+</span> <span class="nx">current</span><span class="p">.</span><span class="nx">_id</span> <span class="o">+</span> <span class="s1">&#39;&lt;/td&gt;&lt;td&gt;&#39;</span> <span class="o">+</span> <span class="nx">current</span><span class="p">.</span><span class="nx">message</span> <span class="o">+</span> <span class="s1">&#39;&lt;/td&gt;&lt;td&gt;&#39;</span> <span class="o">+</span> <span class="nx">current</span><span class="p">.</span><span class="nx">timestamp</span> <span class="o">+</span> <span class="s1">&#39;&lt;/td&gt;&lt;/tr&gt;&#39;</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="nx">table</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/table&gt;&#39;</span><span class="p">;</span>
-
-                    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#content&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">table</span><span class="p">);</span>
-                        <span class="nx">writeLog</span><span class="p">(</span><span class="s1">&#39;Resource reloaded.&#39;</span><span class="p">);</span>
-                <span class="p">}</span>
-            <span class="p">});</span>
-        <span class="p">}</span>
-
-
-        <span class="c1">// outputs messages to log on screen</span>
-    <span class="kd">function</span> <span class="nx">writeLog</span><span class="p">(</span><span class="nx">message</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">color</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span><span class="p">;</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nx">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">;</span>
-            <span class="p">}</span>
-
-            <span class="kd">var</span> <span class="nx">messageHtml</span> <span class="o">=</span> <span class="s1">&#39;&lt;span style=&quot;color: &#39;</span> <span class="o">+</span> <span class="nx">color</span> <span class="o">+</span> <span class="s1">&#39;;&quot;&gt;&#39;</span> <span class="o">+</span> <span class="nx">message</span> <span class="o">+</span> <span class="s1">&#39;&lt;/span&gt;&lt;br&gt;&#39;</span><span class="p">;</span>
-        <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#log&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">messageHtml</span><span class="p">);</span>
-    <span class="p">}</span>
-
-<span class="nt">&lt;/script&gt;</span>
-<span class="nt">&lt;h2&gt;</span>Realtime Apps with CKAN - Tutorial<span class="nt">&lt;/h2&gt;</span>
-
-<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-<span class="nt">&lt;br&gt;</span>
-<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;log&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-</pre></div>
-</div>
-<p>If view the page now, you should be able to see some data rendered in table.</p>
-</div>
-<div class="section" id="step-3-insert-data">
-<h2>Step 3 - insert data<a class="headerlink" href="#step-3-insert-data" title="Permalink to this headline">¶</a></h2>
-<p>Next step, implement a function to insert data. The function:</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="c1">//insert a new tuple into the sample datastore</span>
-<span class="kd">function</span> <span class="nx">insertToDatastore</span><span class="p">(</span><span class="nx">msg</span><span class="p">,</span> <span class="nx">datastore</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">now</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
-
-        <span class="c1">//construct the payload</span>
-        <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="nx">resource_id</span> <span class="o">:</span> <span class="nx">datastore</span><span class="p">,</span>
-                <span class="nx">records</span> <span class="o">:</span> <span class="p">[{</span>
-                        <span class="nx">message</span> <span class="o">:</span> <span class="nx">msg</span><span class="p">,</span>
-                        <span class="nx">timestamp</span> <span class="o">:</span> <span class="nx">now</span><span class="p">.</span><span class="nx">toISOString</span><span class="p">()</span>
-                <span class="p">}],</span>
-        <span class="p">};</span>
-
-        <span class="nx">writeLog</span><span class="p">(</span><span class="s1">&#39;Inserting into &#39;</span> <span class="o">+</span> <span class="nx">datastore</span> <span class="o">+</span> <span class="s1">&#39;...&#39;</span><span class="p">);</span>
-
-        <span class="nx">jQuery</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
-                <span class="nx">url</span> <span class="o">:</span> <span class="nx">actionApiRoot</span> <span class="o">+</span> <span class="s1">&#39;datastore_create&#39;</span><span class="p">,</span>
-                <span class="nx">type</span> <span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
-
-                <span class="c1">// You must authenticate with apikey when inserting</span>
-                <span class="nx">beforeSend</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">request</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="nx">request</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">&quot;Authorization&quot;</span><span class="p">,</span> <span class="nx">apikey</span><span class="p">);</span>
-                <span class="p">},</span>
-
-                <span class="nx">data</span> <span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span>
-                <span class="nx">dataType</span> <span class="o">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
-        <span class="p">});</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Now add some html for inputing text (just above the ouput):</p>
-<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;input&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;label&gt;</span>Insert Into Datastore<span class="nt">&lt;/label&gt;</span>
-        <span class="nt">&lt;br&gt;</span>
-        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">name=</span><span class="s">&quot;message&quot;</span> <span class="na">id=</span><span class="s">&quot;message&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;button&quot;</span> <span class="na">name=</span><span class="s">&quot;insert&quot;</span> <span class="na">value=</span><span class="s">&quot;Insert&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-</pre></div>
-</div>
-<p>And hook up the button with some javascript in the init method:</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;input[name=&#39;insert&#39;]&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">msg</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">(</span><span class="s2">&quot;#message&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
-        <span class="nx">insertToDatastore</span><span class="p">(</span><span class="nx">msg</span><span class="p">,</span> <span class="nx">datastoreResource</span><span class="p">);</span>
-<span class="p">});</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="step-4-connect-to-notification-server-and-subscribe-to-resource-notifications">
-<h2>Step 4 - connect to notification server and subscribe to resource notifications<a class="headerlink" href="#step-4-connect-to-notification-server-and-subscribe-to-resource-notifications" title="Permalink to this headline">¶</a></h2>
-<p>We&#8217;ve got an app which can insert data into datastore and display its data.
-Let&#8217;s connect to our realtime server and subscribe to resource notifications (in the init method):</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="c1">//connect to notification server</span>
-<span class="kd">var</span> <span class="nx">rt</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CkanRT</span><span class="p">(</span><span class="s1">&#39;ws://gatesense.com:9998/&#39;</span><span class="p">);</span>
-
-<span class="c1">// define CkanRT callbacks</span>
-
-<span class="c1">//called when notification server reports back with subscribing status</span>
-<span class="nx">rt</span><span class="p">.</span><span class="nx">onDatastoreSubscribeResult</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">resourceId</span><span class="p">,</span> <span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">writeLog</span><span class="p">(</span><span class="s1">&#39;Subscribe to &#39;</span> <span class="o">+</span> <span class="nx">resourceId</span> <span class="o">+</span> <span class="s1">&#39;. Status: &#39;</span> <span class="o">+</span> <span class="nx">status</span><span class="p">);</span>
-<span class="p">};</span>
-
-<span class="c1">//called when notification server reports back with unsubscribing status</span>
-<span class="nx">rt</span><span class="p">.</span><span class="nx">onDatastoreUnsubscribeResult</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">resourceId</span><span class="p">,</span> <span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">writeLog</span><span class="p">(</span><span class="s1">&#39;Unsubscribe from &#39;</span> <span class="o">+</span> <span class="nx">resourceId</span> <span class="o">+</span> <span class="s1">&#39;. Status: &#39;</span> <span class="o">+</span> <span class="nx">status</span><span class="p">);</span>
-<span class="p">};</span>
-
-<span class="c1">//new event on one of your subscribtions</span>
-<span class="nx">rt</span><span class="p">.</span><span class="nx">onDatastoreEvent</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">writeLog</span><span class="p">(</span><span class="s1">&#39;New event: &#39;</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">event</span><span class="p">));</span>
-<span class="p">};</span>
-
-<span class="c1">//end of CkanRT specific callbacks</span>
-
-<span class="c1">//some WebSocket callbacks</span>
-
-<span class="c1">//subscribe to datastoreResource when WebSocket connection opens</span>
-<span class="nx">rt</span><span class="p">.</span><span class="nx">websocket</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">writeLog</span><span class="p">(</span><span class="s2">&quot;Connection to notification server opened.&quot;</span><span class="p">);</span>
-    <span class="nx">rt</span><span class="p">.</span><span class="nx">datastoreSubscribe</span><span class="p">(</span><span class="nx">datastoreResource</span><span class="p">);</span>
-<span class="p">};</span>
-
-<span class="c1">//connection closed</span>
-<span class="nx">rt</span><span class="p">.</span><span class="nx">websocket</span><span class="p">.</span><span class="nx">onclose</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">writeLog</span><span class="p">(</span><span class="s2">&quot;Disconnected from notification server&quot;</span><span class="p">);</span>
-<span class="p">};</span>
-
-<span class="c1">//something&#39;s wrong...</span>
-<span class="nx">rt</span><span class="p">.</span><span class="nx">websocket</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">writeLog</span><span class="p">(</span><span class="s1">&#39;ERROR:&#39;</span> <span class="o">+</span> <span class="nx">evt</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-<span class="p">};</span>
-<span class="c1">//end of WebSocket callbacks</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="step-5-reload-the-table-in-realtime">
-<h2>Step 5 - reload the table in realtime<a class="headerlink" href="#step-5-reload-the-table-in-realtime" title="Permalink to this headline">¶</a></h2>
-<p>One last thing- let&#8217;s reload the table when we get a notification because I&#8217;m really tired of pressing F5 :)</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">rt</span><span class="p">.</span><span class="nx">onDatastoreEvent</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">writeLog</span><span class="p">(</span><span class="s1">&#39;New event: &#39;</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">event</span><span class="p">));</span>
-    <span class="nx">reload</span><span class="p">(</span><span class="nx">datastoreResource</span><span class="p">);</span>
-<span class="p">};</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="step-6-we-re-done">
-<h2>Step 6 - We&#8217;re done!<a class="headerlink" href="#step-6-we-re-done" title="Permalink to this headline">¶</a></h2>
-<p>You can find the code for this app <a class="reference external" href="http://gatesense.com/snippets/realtime-tutorial.zip">here</a>. You call also see the app <a class="reference external" href="http://gatesense.com/realtime-tutorial">running</a></p>
-</div>
-<div class="section" id="what-s-next">
-<h2>What&#8217;s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
-<p>OK, so this app isn&#8217;t very nice- can you come up with something better? Register at <a class="reference external" href="http://gatesense.com">gatesense.com</a>, get your apikey and start hacking . I look forward to see what you build :)</p>
-</div>
-</div>
 
 
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="Realtime apps with CKAN (Tutorial)"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral" title="Welcome to ckanext-realtime’s documentation!"><span class="fa fa-arrow-circle-left"></span> Previous</a>
