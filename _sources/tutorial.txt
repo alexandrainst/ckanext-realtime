@@ -53,36 +53,36 @@ We will start with an app with CkanRT and jQuery included which simply renders o
                 reload();
     	}
     
-            //get resource data via CKAN Action API and draw a table out of it
-            function reload() {
-    		$.ajax({
-    		    url : actionApiRoot + 'datastore_search?resource_id=' + datastore + '&sort=_id',
-    		    type : 'GET',
-    		    success : function(data) {
+        //get resource data via CKAN Action API and draw a table out of it
+        function reload() {
+    	    $.ajax({
+    	        url : actionApiRoot + 'datastore_search?resource_id=' + datastore + '&sort=_id',
+    	        type : 'GET',
+    	        success : function(data) {
     
-                            // iterate through results and construct a table out of them
-    		        var table = '<table border="1" style="border-collapse: collapse"><tr><th>_id</th><th>message</th><th>timestamp</th></tr>';
-    		        for (i in data.result.records) {
-    		            var current = data.result.records[i];
-    		            table += '<tr><td>' + current._id + '</td><td>' + current.message + '</td><td>' + current.timestamp + '</td></tr>';
-    		        }
-    		        table += '</table>';
-    		        
-    		        $('#content').html(table);
-                            writeLog('Resource reloaded.');
-    		    }
-    		});
-            }
+                    // iterate through results and construct a table out of them
+    	            var table = '<table border="1" style="border-collapse: collapse"><tr><th>_id</th><th>message</th><th>timestamp</th></tr>';
+    	            for (i in data.result.records) {
+    	                var current = data.result.records[i];
+    	                table += '<tr><td>' + current._id + '</td><td>' + current.message + '</td><td>' + current.timestamp + '</td></tr>';
+    	            }
+    	            table += '</table>';
+    	            
+    	            $('#content').html(table);
+                    writeLog('Resource reloaded.');
+    	        }
+    	    });
+        }
     
     
-            // outputs messages to log on screen
+        // outputs messages to log on screen
     	function writeLog(message, error) {
                 var color = 'blue';
                 if (error) {
                     color = 'red';
                 }
     
-                var messageHtml = '<span style="color: ' + color + ';">' + message + '</span><br>';
+            var messageHtml = '<span style="color: ' + color + ';">' + message + '</span><br>';
     	    $('#log').append(messageHtml);
     	}
     
@@ -101,54 +101,54 @@ Next step, implement a function to insert data. The function:
 
 .. code-block:: javascript
 
-        //insert a new tuple into the sample datastore
-	function insertToDatastore(msg, datastore) {
-		var now = new Date();
-
-                //construct the payload
-		var data = {
-			resource_id : datastore,
-			records : [{
-				message : msg,
-				timestamp : now.toISOString()
-			}],
-		};
-
-		writeLog('Inserting into ' + datastore + '...');
-
-		jQuery.ajax({
-			url : actionApiRoot + 'datastore_create',
-			type : 'POST',
-
-                        // You must authenticate with apikey when inserting
-			beforeSend : function(request) {
-				request.setRequestHeader("Authorization", apikey);
-			},
-
-			data : JSON.stringify(data),
-			dataType : 'application/json',
-		});
-	}
+    //insert a new tuple into the sample datastore
+    function insertToDatastore(msg, datastore) {
+    	var now = new Date();
+    
+        //construct the payload
+    	var data = {
+    		resource_id : datastore,
+    		records : [{
+    			message : msg,
+    			timestamp : now.toISOString()
+    		}],
+    	};
+    
+    	writeLog('Inserting into ' + datastore + '...');
+    
+    	jQuery.ajax({
+    		url : actionApiRoot + 'datastore_create',
+    		type : 'POST',
+    
+                // You must authenticate with apikey when inserting
+    		beforeSend : function(request) {
+    			request.setRequestHeader("Authorization", apikey);
+    		},
+    
+    		data : JSON.stringify(data),
+    		dataType : 'application/json',
+    	});
+    }
 
 Now add some html for inputing text (just above the ouput):
 
 .. code-block:: html
 
-        <div id="input">
-        	<label>Insert Into Datastore</label>
-        	<br>
-        	<input type="text" name="message" id="message">
-        	<input type="button" name="insert" value="Insert">
-        </div>
+    <div id="input">
+    	<label>Insert Into Datastore</label>
+    	<br>
+    	<input type="text" name="message" id="message">
+    	<input type="button" name="insert" value="Insert">
+    </div>
 
 And hook up the button with some javascript in the init method:
 
 .. code-block:: javascript
 
-        $("input[name='insert']").click(function() {
-        	var msg = jQuery("#message").val();
-        	insertToDatastore(msg, datastoreResource);
-        });
+    $("input[name='insert']").click(function() {
+    	var msg = jQuery("#message").val();
+    	insertToDatastore(msg, datastoreResource);
+    });
 
 Step 4 - connect to notification server and subscribe to resource notifications
 -------------------------------------------------------------------------------
@@ -157,46 +157,46 @@ Let's connect to our realtime server and subscribe to resource notifications (in
 
 .. code-block:: javascript
 
-            //connect to notification server
-	    var rt = new CkanRT('ws://gatesense.com:9998/');
-
-	    // define CkanRT callbacks
-
-            //called when notification server reports back with subscribing status
-	    rt.onDatastoreSubscribeResult = function(resourceId, status) {
-	    	writeLog('Subscribe to ' + resourceId + '. Status: ' + status);
-	    };
-
-            //called when notification server reports back with unsubscribing status
-	    rt.onDatastoreUnsubscribeResult = function(resourceId, status) {
-	    	writeLog('Unsubscribe from ' + resourceId + '. Status: ' + status);
-	    };
-
-            //new event on one of your subscribtions
-	    rt.onDatastoreEvent = function(event) {
-	    	writeLog('New event: ' + JSON.stringify(event));
-	    };
-
-	    //end of CkanRT specific callbacks
-
-	    //some WebSocket callbacks
-
-            //subscribe to datastoreResource when WebSocket connection opens
-	    rt.websocket.onopen = function(evt) {
-	    	writeLog("Connection to notification server opened.");
-	    	rt.datastoreSubscribe(datastoreResource);
-	    };
-
-            //connection closed
-	    rt.websocket.onclose = function(evt) {
-	    	writeLog("Disconnected from notification server");
-	    };
-
-            //something's wrong...
-	    rt.websocket.onerror = function(evt) {
-	    	writeLog('ERROR:' + evt.data, true);
-	    };
-            //end of WebSocket callbacks
+    //connect to notification server
+    var rt = new CkanRT('ws://gatesense.com:9998/');
+    
+    // define CkanRT callbacks
+    
+    //called when notification server reports back with subscribing status
+    rt.onDatastoreSubscribeResult = function(resourceId, status) {
+    	writeLog('Subscribe to ' + resourceId + '. Status: ' + status);
+    };
+    
+    //called when notification server reports back with unsubscribing status
+    rt.onDatastoreUnsubscribeResult = function(resourceId, status) {
+    	writeLog('Unsubscribe from ' + resourceId + '. Status: ' + status);
+    };
+    
+    //new event on one of your subscribtions
+    rt.onDatastoreEvent = function(event) {
+    	writeLog('New event: ' + JSON.stringify(event));
+    };
+    
+    //end of CkanRT specific callbacks
+    
+    //some WebSocket callbacks
+    
+    //subscribe to datastoreResource when WebSocket connection opens
+    rt.websocket.onopen = function(evt) {
+    	writeLog("Connection to notification server opened.");
+    	rt.datastoreSubscribe(datastoreResource);
+    };
+    
+    //connection closed
+    rt.websocket.onclose = function(evt) {
+    	writeLog("Disconnected from notification server");
+    };
+    
+    //something's wrong...
+    rt.websocket.onerror = function(evt) {
+    	writeLog('ERROR:' + evt.data, true);
+    };
+    //end of WebSocket callbacks
 
 
 Step 5 - reload the table in realtime
