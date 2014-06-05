@@ -4,7 +4,7 @@ Realtime apps with CKAN (Tutorial)
 Intro
 -----
 
-`ckanext-realtime <https://github.com/alexandrainst/ckanext-realtime>`_ is the latest contributions to Free Software from Gatesense team. It is an extension for CKAN open data platform which enables app developers to make realtime applications with CKAN. More specifically, you can subscribe to resources (datastores) and thus monitor their changes in realtime. gatesense.com is a realtime-enabled CKAN portal, among other things. This means that you can build realtime apps with datasets found at http://gatesense.com/ckan/dataset .
+`ckanext-realtime <https://github.com/alexandrainst/ckanext-realtime>`_ is the latest contributions to Free Software from Gatesense team. It is an extension for CKAN open data platform which enables app developers to make realtime applications with CKAN. More specifically, you can subscribe to resources (datastores) and thus monitor their changes in realtime. gatesense.com is a realtime-enabled CKAN portal, among other things. This means that you can build realtime apps with datasets found at http://gatesense.com/data/dataset .
 
 
 Requirements
@@ -14,7 +14,7 @@ To complete this tutorial, you will need a CKAN data portal with ckanext-realtim
 Tutorial
 --------
 
-For this tutorial we will use a dummy dataset - `ckanext-realtime showcase <http://gatesense.com/ckan/dataset/ckanext-realtime-showcase>`_. Alternatively, you can choose to use a dataset that contains real data like Realtime traffic data on `gatesense <http://gatesense.com/ckan/datasets>`_.
+For this tutorial we will use a dummy dataset - `ckanext-realtime showcase <http://gatesense.com/data/dataset/ckanext-realtime-showcase>`_. Alternatively, you can choose to use a dataset that contains real data like Realtime traffic data on `gatesense <http://gatesense.com/data/datasets>`_.
 
 Our client application will reload resource presentation in realtime, every time some new data comes in (much like this `one <http://gatesense.com/realtime/examples/ex2/>`_ ).
 
@@ -42,7 +42,7 @@ We will start with an app with CkanRT and jQuery included which simply renders o
     
     <script language="javascript" type="text/javascript">
     	var datastore = '07324b49-37d8-4c43-8077-df0f8a430f79';
-    	var actionApiRoot = 'http://gatesense.com/ckan/api/3/action/';
+    	var actionApiRoot = 'http://gatesense.com/data/api/3/action/';
     	var apikey = '<your api key>';
     
     	$(document).ready(function() {

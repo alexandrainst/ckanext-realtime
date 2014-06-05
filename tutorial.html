@@ -121,7 +121,7 @@
 <h1>Realtime apps with CKAN (Tutorial)<a class="headerlink" href="#realtime-apps-with-ckan-tutorial" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="intro">
 <h2>Intro<a class="headerlink" href="#intro" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://github.com/alexandrainst/ckanext-realtime">ckanext-realtime</a> is the latest contributions to Free Software from Gatesense team. It is an extension for CKAN open data platform which enables app developers to make realtime applications with CKAN. More specifically, you can subscribe to resources (datastores) and thus monitor their changes in realtime. gatesense.com is a realtime-enabled CKAN portal, among other things. This means that you can build realtime apps with datasets found at <a class="reference external" href="http://gatesense.com/ckan/dataset">http://gatesense.com/ckan/dataset</a> .</p>
+<p><a class="reference external" href="https://github.com/alexandrainst/ckanext-realtime">ckanext-realtime</a> is the latest contributions to Free Software from Gatesense team. It is an extension for CKAN open data platform which enables app developers to make realtime applications with CKAN. More specifically, you can subscribe to resources (datastores) and thus monitor their changes in realtime. gatesense.com is a realtime-enabled CKAN portal, among other things. This means that you can build realtime apps with datasets found at <a class="reference external" href="http://gatesense.com/data/dataset">http://gatesense.com/data/dataset</a> .</p>
 </div>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
@@ -129,7 +129,7 @@
 </div>
 <div class="section" id="tutorial">
 <h2>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h2>
-<p>For this tutorial we will use a dummy dataset - <a class="reference external" href="http://gatesense.com/ckan/dataset/ckanext-realtime-showcase">ckanext-realtime showcase</a>. Alternatively, you can choose to use a dataset that contains real data like Realtime traffic data on <a class="reference external" href="http://gatesense.com/ckan/datasets">gatesense</a>.</p>
+<p>For this tutorial we will use a dummy dataset - <a class="reference external" href="http://gatesense.com/data/dataset/ckanext-realtime-showcase">ckanext-realtime showcase</a>. Alternatively, you can choose to use a dataset that contains real data like Realtime traffic data on <a class="reference external" href="http://gatesense.com/data/datasets">gatesense</a>.</p>
 <p>Our client application will reload resource presentation in realtime, every time some new data comes in (much like this <a class="reference external" href="http://gatesense.com/realtime/examples/ex2/">one</a> ).</p>
 <p>In order to achieve realtime, ckanext-realtime uses WebSocket protocol. The WebSocket server is running on ws://gatesense.com:9998/ .</p>
 </div>
@@ -151,7 +151,7 @@
 
 <span class="nt">&lt;script </span><span class="na">language=</span><span class="s">&quot;javascript&quot;</span> <span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
     <span class="kd">var</span> <span class="nx">datastore</span> <span class="o">=</span> <span class="s1">&#39;07324b49-37d8-4c43-8077-df0f8a430f79&#39;</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">actionApiRoot</span> <span class="o">=</span> <span class="s1">&#39;http://gatesense.com/ckan/api/3/action/&#39;</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">actionApiRoot</span> <span class="o">=</span> <span class="s1">&#39;http://gatesense.com/data/api/3/action/&#39;</span><span class="p">;</span>
     <span class="kd">var</span> <span class="nx">apikey</span> <span class="o">=</span> <span class="s1">&#39;&lt;your api key&gt;&#39;</span><span class="p">;</span>
 
     <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
