@@ -23,7 +23,7 @@ def call_ckan_api(notify, ckan_api_url, apikey):
         (E.g. 'http://localhost:5000/api/3/action/')
     
     :param apikey: ckan api key for this script, used to call
-        'realtime_broadcast_events' action
+        'realtime_broadcast_event' api function
         
     '''
     url = urlparse.urljoin(ckan_api_url, 'realtime_broadcast_event')
